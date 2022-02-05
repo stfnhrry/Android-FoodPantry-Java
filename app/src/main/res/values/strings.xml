@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">FoodPantryJava</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pantry_fragment">Pantry Fragment</string>
+    <string name="search_fragment">Search Fragment</string>
+    <string name="shopping_list_fragment">Shopping List Fragment</string>
+
+    <string-array name="categories">
+        <item>CANS</item>
+        <item>JARS</item>
+        <item>DRINKS</item>
+        <item>BARS</item>
+        <item>GRAINS</item>
+        <item>COOKIES</item>
+        <item>OTHER</item>
+    </string-array>
+</resources>

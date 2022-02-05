@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_cookie_24.xml" value="0.5199134199134199" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.319" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_food_bank_24.xml" value="0.309" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.5109375" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_create_24dp.xml" value="0.319" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_outline_create_24.xml" value="0.319" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_search_black_24dp.xml" value="0.309" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/icon_alarms.xml" value="0.309" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/sample_icon.xml" value="0.49437229437229435" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/activity_main.xml" value="0.18117283950617283" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/add_item_dialog.xml" value="0.27265625" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/fragment_pantry.xml" value="0.264" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/fragment_search.xml" value="0.4947916666666667" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/fragment_settings.xml" value="0.43072916666666666" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/fragment_shopping_list.xml" value="0.4947916666666667" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/item_card.xml" value="0.2904502721425037" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/navigation_drawer_header.xml" value="0.22280701754385965" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.4947916666666667" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/menu/navigation_drawer_header.xml" value="0.22280701754385965" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/menu/navigation_drawer_menu.xml" value="0.22280701754385965" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/menu/navigation_rail_menu.xml" value="0.38311688311688313" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/menu/search.xml" value="0.49230769230769234" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

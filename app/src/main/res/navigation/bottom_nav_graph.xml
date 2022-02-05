@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_nav_graph"
+    app:startDestination="@id/pantryPage">
+
+    <fragment
+        android:id="@+id/pantryPage"
+        android:name="com.example.foodpantryjava.PantryFragment"
+        android:label="fragment_pantry"
+        tools:layout="@layout/fragment_pantry" />
+    <fragment
+        android:id="@+id/searchPage"
+        android:name="com.example.foodpantryjava.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/shoppingListPage"
+        android:name="com.example.foodpantryjava.ShoppingListFragment"
+        android:label="fragment_shopping_list"
+        tools:layout="@layout/fragment_shopping_list" />
+    <fragment
+        android:id="@+id/settingsPage"
+        android:name="com.example.foodpantryjava.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+</navigation>

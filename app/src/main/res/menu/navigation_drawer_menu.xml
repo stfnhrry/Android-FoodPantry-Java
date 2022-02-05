@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/main_item"
+        android:title="mail_subheader_title">
+        <menu>
+            <item
+                android:id="@+id/pantryPage"
+                android:icon="@drawable/ic_baseline_home_24"
+                android:title="Pantry"
+                android:checkable="true"/>
+            <item
+                android:id="@+id/searchPage"
+                android:icon="@drawable/ic_baseline_search_24"
+                android:title="Search"
+                android:checkable="true"/>
+            <item
+                android:id="@+id/shoppingListPage"
+                android:icon="@drawable/ic_baseline_notifications_24"
+                android:title="Shopping List"
+                android:checkable="true"/>
+            <item
+                android:id="@+id/settingsPage"
+                android:icon="@drawable/ic_baseline_person_24"
+                android:title="Settings"
+                android:checkable="true"/>
+        </menu>
+    </item>
+</menu>

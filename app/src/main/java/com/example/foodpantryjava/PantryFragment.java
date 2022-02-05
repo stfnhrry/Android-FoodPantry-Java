@@ -37,7 +37,9 @@ import java.util.Map;
  */
 public class PantryFragment extends Fragment {
 
-  public static RecyclerView pantryRecyclerView;
+  RecyclerView pantryRecyclerView;
+
+
   public static ArrayList<Item> data = new ArrayList<>();
   Integer minCardWidth = 293;
   Integer columns = 1;
@@ -129,31 +131,28 @@ public class PantryFragment extends Fragment {
 //  }
 
   public void add(String name, String category, Integer number, String size, String expiryDate){
+    pantryRecyclerView = getView().findViewById(R.id.recyclerView);
     Log.i("SAVE", "Recycler view items (Before adding) are now: " + pantryRecyclerView.getChildCount());
     dataNum = data.size();
     Log.i("SAVE", "Adding item to this index: " + dataNum);
+    Log.i("SAVE", "Data before adding: " + data);
     data.add(dataNum, new Item(name, category, number, size, expiryDate));
+    Log.i("SAVE", "Data after adding: " + data);
     adapter.notifyItemInserted(dataNum);
-    Log.i("SAVE", "Recycler view items (Just after adding) are now: " + pantryRecyclerView.getChildCount());
-    //    saveToArray(R.drawable.forkandspoon, name, category, number, size, expiryDate, dataSize);
-    if (pantryRecyclerView == null) {
-      Log.i("SAVE", "recycler view is null");
-    }
-    else {
-      Log.i("SAVE", "recycler view is not null");
-    }
-    Log.i("SAVE", "recycler view (just before looking for how many) has this many items: " + pantryRecyclerView.getChildCount());
-    if (pantryRecyclerView.getChildAt(dataNum) == null) {
-      Log.i("SAVE", "recycler view child at " + dataNum + " is null");
-    }
-    else {
-      Log.i("SAVE", "recycler view child at " + dataNum + " is valid");
-    }
-//    pantryRecyclerView.getChildAt(dataNum).findViewById(R.id.removeButton).setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        Log.i("SAVE", "Remove function works on item ");
-//      }
-//    });
+//    Log.i("SAVE", "Recycler view items (Just after adding) are now: " + pantryRecyclerView.getChildCount());
+//    //    saveToArray(R.drawable.forkandspoon, name, category, number, size, expiryDate, dataSize);
+//    if (pantryRecyclerView == null) {
+//      Log.i("SAVE", "recycler view is null");
+//    }
+//    else {
+//      Log.i("SAVE", "recycler view is not null");
+//    }
+//    Log.i("SAVE", "recycler view (just before looking for how many) has this many items: " + pantryRecyclerView.getChildCount());
+//    if (pantryRecyclerView.getChildAt(dataNum) == null) {
+//      Log.i("SAVE", "recycler view child at " + dataNum + " is null");
+//    }
+//    else {
+//      Log.i("SAVE", "recycler view child at " + dataNum + " is valid");
+//    }
   }
 }

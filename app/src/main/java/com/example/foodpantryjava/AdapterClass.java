@@ -18,13 +18,9 @@ import java.util.ArrayList;
 public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> {
 
   ArrayList<Item> data;
-  MainActivity main;
 
   public AdapterClass(ArrayList<Item> data) {
     this.data = data;
-  }
-  public AdapterClass(MainActivity main) {
-    this.main = main;
   }
 
   @NonNull
@@ -69,18 +65,21 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
     holder.removeB.setOnClickListener(
         new View.OnClickListener() {
           @Override
-          public void onClick(View view) {
+          public void onClick(View v) {
             Integer index = holder.getAdapterPosition();
+            Log.i("SAVE", "The index of this item is: " + index);
+            Log.i("SAVE", "Data looks like: " + data);
             data.remove(index);
-            notifyItemRemoved(index);
-            if (main != null) {
-              Log.i("SAVE", "onClick: Main is not null");
-//              main.map.remove(index);
-              main.removeItemFromPantry(index);
-            }
-            else{
-              Log.i("SAVE", "onClick: Main activity is null");
-            }
+            Log.i("SAVE", "After removing, data looks like: " + data);
+//            notifyItemRemoved(index);
+            //            if (main != null) {
+            //              Log.i("SAVE", "onClick: Main is not null");
+            ////              main.map.remove(index);
+            ////              main.removeItemFromPantry(index);
+            //            }
+            //            else{
+            //              Log.i("SAVE", "onClick: Main activity is null");
+            //            }
           }
         });
   }

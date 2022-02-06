@@ -37,16 +37,16 @@ import java.util.Map;
  */
 public class PantryFragment extends Fragment {
 
-  RecyclerView pantryRecyclerView;
+  public static RecyclerView pantryRecyclerView;
 
 
-  public static ArrayList<Item> data = new ArrayList<>();
   Integer minCardWidth = 293;
   Integer columns = 1;
 
   int numItems;
-  SaveFile hashMapFile = new SaveFile();
-  Map<Integer, String[]> map = hashMapFile.pantry;
+  static SaveFile hashMapFile = new SaveFile();
+  static Map<Integer, String[]> map = SaveFile.pantry;
+  static ArrayList<Item> data = SaveFile.data;
 //  static ShoppingListFile staticShoppingList = new ShoppingListFile();
   //static ArrayList<String> itemNames = staticShoppingList.itemNames;
 //  static ArrayList<String> itemNames = ShoppingListFile.itemNames;
@@ -76,7 +76,7 @@ public class PantryFragment extends Fragment {
     pantryRecyclerView.setHasFixedSize(true);
     setNumberOfColumnsBasedOnScreenWidth();
     pantryRecyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), columns, LinearLayoutManager.VERTICAL, false));
-    adapter = new AdapterClass(data);
+    adapter = new AdapterClass();
     pantryRecyclerView.setAdapter(adapter);
     Decoration decoration = new Decoration(8);
     pantryRecyclerView.addItemDecoration(decoration);
@@ -131,8 +131,6 @@ public class PantryFragment extends Fragment {
 //  }
 
   public void add(String name, String category, Integer number, String size, String expiryDate){
-    pantryRecyclerView = getView().findViewById(R.id.recyclerView);
-    Log.i("SAVE", "Recycler view items (Before adding) are now: " + pantryRecyclerView.getChildCount());
     dataNum = data.size();
     Log.i("SAVE", "Adding item to this index: " + dataNum);
     Log.i("SAVE", "Data before adding: " + data);

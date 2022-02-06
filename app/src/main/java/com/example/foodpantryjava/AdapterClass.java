@@ -14,13 +14,16 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Map;
 
 public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> {
 
-  ArrayList<Item> data;
+  static Map<Integer, String[]> map = SaveFile.pantry;
+  static ArrayList<Item> data = SaveFile.data;
 
-  public AdapterClass(ArrayList<Item> data) {
-    this.data = data;
+  public AdapterClass() {
+    //empty
   }
 
   @NonNull
@@ -38,12 +41,13 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
 //    else {
 //      holder.name.setBackgroundColor(Color.YELLOW);
 //    }
-//    holder.icon.setImageResource(R.drawable.cookies);
+    holder.icon.setImageResource(data.get(position).icon);
     holder.name.setText(data.get(position).name);
     holder.category.setText(data.get(position).category);
-    holder.number.setText(data.get(position).number.toString());
+    holder.number.setText(data.get(position).number.toString() + " left in pantry");
     holder.size.setText(data.get(position).size);
     holder.expiryDate.setText(data.get(position).expiryDate);
+    holder.expiryText.setText("Expires in " + data.get(position).expiryText + " days");
 
     holder.card.setOnClickListener(
             v -> Toast.makeText(
@@ -66,20 +70,19 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            Integer index = holder.getAdapterPosition();
+            int index = holder.getAdapterPosition();
             Log.i("SAVE", "The index of this item is: " + index);
             Log.i("SAVE", "Data looks like: " + data);
             data.remove(index);
             Log.i("SAVE", "After removing, data looks like: " + data);
-//            notifyItemRemoved(index);
-            //            if (main != null) {
-            //              Log.i("SAVE", "onClick: Main is not null");
-            ////              main.map.remove(index);
-            ////              main.removeItemFromPantry(index);
-            //            }
-            //            else{
-            //              Log.i("SAVE", "onClick: Main activity is null");
-            //            }
+            notifyItemRemoved(index);
+            if (map != null) {
+              Log.i("SAVE", "onClick: Main is not null");
+              map.remove(index);
+            }
+            else{
+              Log.i("SAVE", "onClick: Main activity is null");
+            }
           }
         });
   }
@@ -91,7 +94,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
 
   public static class ViewHolder extends RecyclerView.ViewHolder {
     ImageView icon;
-    TextView name, category, number, size, expiryDate;
+    TextView name, category, number, size, expiryDate, expiryText;
     CardView card;
     ImageButton removeB, editB, addToListB;
     public ViewHolder (@NonNull View itemView) {
@@ -103,6 +106,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
       number = itemView.findViewById(R.id.amountText);
       size = itemView.findViewById(R.id.sizeText);
       expiryDate = itemView.findViewById(R.id.expiryDateText);
+      expiryText = itemView.findViewById(R.id.expiryText);
       removeB = itemView.findViewById(R.id.removeButton);
       editB = itemView.findViewById(R.id.editButton);
       addToListB = itemView.findViewById(R.id.toShoppingListButton);

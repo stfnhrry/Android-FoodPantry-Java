@@ -52,11 +52,12 @@ public class MainActivity extends AppCompatActivity  {
   private final Handler handler = new Handler();
   private Boolean backPressedOnce = false;
   final Runnable runnable = this::setBackPressedToFalse;
-  PantryFragment itemViews;
+  public static PantryFragment itemViews;
   Toast lastToast;
 
   SaveFile hashMapFile = new SaveFile();
   Map<Integer, String[]> map = hashMapFile.pantry;
+  ArrayList<Item> data = hashMapFile.data;
 
   BottomNavigationView navigationBar;
   NavigationRailView navRail;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity  {
   EditText weight;
   EditText expDate;
 
-  ArrayList<Item> data = new ArrayList<>();
+//  ArrayList<Item> data = new ArrayList<>();
 
   Integer dataNum;
 
@@ -291,7 +292,7 @@ public class MainActivity extends AppCompatActivity  {
 //    itemViews.adapter.notifyItemInserted(dataSize);
 //    itemViews.add(name, category, number, size, expiryDate);
     Log.i("SAVE", "Recycler view items(Added to data, before adding to array) are now: " + itemViews.pantryRecyclerView.getChildCount());
-    saveToArray(R.drawable.forkandspoon, name, category, number, size, expiryDate, dataSize);
+    saveToArray(R.drawable.forkandspoon, name, category, number, size, expiryDate, dataNum);
 //    itemViews.pantryRecyclerView.getChildAt(dataSize).findViewById(R.id.removeButton).setOnClickListener(new View.OnClickListener() {
 //      @Override
 //      public void onClick(View view) {

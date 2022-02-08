@@ -1,36 +1,17 @@
 package com.example.foodpantryjava;
 
-import static android.content.ContentValues.TAG;
-
-import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,23 +20,10 @@ public class PantryFragment extends Fragment {
 
   public static RecyclerView pantryRecyclerView;
 
-
-  Integer minCardWidth = 293;
+  int minCardWidth = 293;
   Integer columns = 1;
 
-  int numItems;
-  static SaveFile hashMapFile = new SaveFile();
-  static Map<Integer, String[]> map = SaveFile.pantry;
-  static ArrayList<Item> data = SaveFile.data;
-//  static ShoppingListFile staticShoppingList = new ShoppingListFile();
-  //static ArrayList<String> itemNames = staticShoppingList.itemNames;
-//  static ArrayList<String> itemNames = ShoppingListFile.itemNames;
-  ArrayList<String> sizes = new ArrayList<>();
-  Boolean inRemovingMode = false;
-
   public static AdapterClass adapter;
-
-  Integer dataNum;
 
   public PantryFragment() {
     // Required empty public constructor
@@ -76,11 +44,35 @@ public class PantryFragment extends Fragment {
     pantryRecyclerView.setHasFixedSize(true);
     setNumberOfColumnsBasedOnScreenWidth();
     pantryRecyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), columns, LinearLayoutManager.VERTICAL, false));
-    adapter = new AdapterClass();
-    pantryRecyclerView.setAdapter(adapter);
     Decoration decoration = new Decoration(8);
     pantryRecyclerView.addItemDecoration(decoration);
+    adapter = new AdapterClass(
+            new AdapterClass.itemCardListener() {
+              @Override
+              public void onDelete(int position) {
+                if (getActivity() != null) {
+                  Log.i("PANTRY FRAGMENT", "Item was deleted");
+                  ((MainActivity)getActivity()).removeItemFromPantry(position);
+                }
+              }
 
+              @Override
+              public void onEdit(int position) {
+                if (getActivity() != null) {
+                  Log.i("PANTRY FRAGMENT", "Item was edited");
+                  ((MainActivity)getActivity()).showEditItemDialog(position);
+                }
+              }
+
+              @Override
+              public void onAddToList(int position) {
+                if (getActivity() != null) {
+                  Log.i("PANTRY FRAGMENT", "Item was added to shopping list");
+//                  ((MainActivity)getActivity()).addToShoppingList(position);
+                }
+              }
+            }, getResources());
+    pantryRecyclerView.setAdapter(adapter);
     return view;
   }
 
@@ -103,8 +95,6 @@ public class PantryFragment extends Fragment {
     else{
       columns = (currentScreenWidth - 64)/minCardWidth;
     }
-
-//    Toast.makeText(getContext(), "The actual screen width is: " + currentScreenWidth + " , my double is: " + BigDecimal.valueOf(currentScreenWidth/minCardWidth) + " , and the columns are: " + columns, Toast.LENGTH_LONG).show();
   }
 
   public static class Decoration extends RecyclerView.ItemDecoration {
@@ -115,42 +105,12 @@ public class PantryFragment extends Fragment {
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                               RecyclerView.State state) {
+    public void getItemOffsets(Rect outRect, @NonNull View view, @NonNull RecyclerView parent,
+                               @NonNull RecyclerView.State state) {
       outRect.left = space;
       outRect.right = space;
       outRect.top = space;
       outRect.bottom = space;
     }
-  }
-
-//  @Override
-//  public void onResume() {
-////    super.onResume();
-//    Log.i("SAVE", "onResume: Fragment was resumed");
-//  }
-
-  public void add(String name, String category, Integer number, String size, String expiryDate){
-    dataNum = data.size();
-    Log.i("SAVE", "Adding item to this index: " + dataNum);
-    Log.i("SAVE", "Data before adding: " + data);
-    data.add(dataNum, new Item(name, category, number, size, expiryDate));
-    Log.i("SAVE", "Data after adding: " + data);
-    adapter.notifyItemInserted(dataNum);
-//    Log.i("SAVE", "Recycler view items (Just after adding) are now: " + pantryRecyclerView.getChildCount());
-//    //    saveToArray(R.drawable.forkandspoon, name, category, number, size, expiryDate, dataSize);
-//    if (pantryRecyclerView == null) {
-//      Log.i("SAVE", "recycler view is null");
-//    }
-//    else {
-//      Log.i("SAVE", "recycler view is not null");
-//    }
-//    Log.i("SAVE", "recycler view (just before looking for how many) has this many items: " + pantryRecyclerView.getChildCount());
-//    if (pantryRecyclerView.getChildAt(dataNum) == null) {
-//      Log.i("SAVE", "recycler view child at " + dataNum + " is null");
-//    }
-//    else {
-//      Log.i("SAVE", "recycler view child at " + dataNum + " is valid");
-//    }
   }
 }

@@ -1,5 +1,6 @@
 package com.example.foodpantryjava;
 
+import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,78 +14,50 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
-import java.util.Map;
 
 public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> {
+  //Listener for implementing functions on clicking item cards
+  public interface itemCardListener {
+    void onDelete(int position);
+    void onEdit(int position);
+    void onAddToList(int position);
+  }
+  private final itemCardListener mListener;
+  ArrayList<Item> data = SaveFile.data;
+  Resources mResource;
 
-  static Map<Integer, String[]> map = SaveFile.pantry;
-  static ArrayList<Item> data = SaveFile.data;
+  static int daysTillExpiryWarning = 30;
 
-  public AdapterClass() {
-    //empty
+  public AdapterClass(itemCardListener listener, Resources resources) {
+    mListener = listener;
+    mResource = resources;
   }
 
   @NonNull
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
+    Log.i("ADAPTER", "onCreateViewHolder: ");
 //    data = sortByAge(data);
-    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, null));
+    return new ViewHolder(v);
   }
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//    if (data.get(position).age > 30) {
-//      holder.name.setBackgroundColor(Color.BLUE);
-//    }
-//    else {
-//      holder.name.setBackgroundColor(Color.YELLOW);
-//    }
-    holder.icon.setImageResource(data.get(position).icon);
-    holder.name.setText(data.get(position).name);
-    holder.category.setText(data.get(position).category);
-    holder.number.setText(data.get(position).number.toString() + " left in pantry");
-    holder.size.setText(data.get(position).size);
-    holder.expiryDate.setText(data.get(position).expiryDate);
-    holder.expiryText.setText("Expires in " + data.get(position).expiryText + " days");
-
-    holder.card.setOnClickListener(
-            v -> Toast.makeText(
-                    v.getContext(),
-                    data.get(holder.getAdapterPosition()).name + " is clicked",
-                    Toast.LENGTH_SHORT)
-                .show());
-
-    holder.card.setOnLongClickListener(
-            v -> {
-              Toast.makeText(
-                      v.getContext(),
-                      data.get(holder.getAdapterPosition()).name + " is long clicked",
-                      Toast.LENGTH_SHORT)
-                  .show();
-              return true;
-            });
-
-    holder.removeB.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            int index = holder.getAdapterPosition();
-            Log.i("SAVE", "The index of this item is: " + index);
-            Log.i("SAVE", "Data looks like: " + data);
-            data.remove(index);
-            Log.i("SAVE", "After removing, data looks like: " + data);
-            notifyItemRemoved(index);
-            if (map != null) {
-              Log.i("SAVE", "onClick: Main is not null");
-              map.remove(index);
-            }
-            else{
-              Log.i("SAVE", "onClick: Main activity is null");
-            }
-          }
-        });
+    Log.i("ADAPTER", "onBindViewHolder: ");
+    /*
+    if (data.get(position).age > 30) {
+      holder.name.setBackgroundColor(Color.BLUE);
+    }
+    else {
+      holder.name.setBackgroundColor(Color.YELLOW);
+    } */
+    holder.bind();
   }
 
   @Override
@@ -92,13 +65,14 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
     return data.size();
   }
 
-  public static class ViewHolder extends RecyclerView.ViewHolder {
+  public class ViewHolder extends RecyclerView.ViewHolder {
     ImageView icon;
     TextView name, category, number, size, expiryDate, expiryText;
     CardView card;
     ImageButton removeB, editB, addToListB;
     public ViewHolder (@NonNull View itemView) {
       super(itemView);
+      Log.i("ADAPTER", "ViewHolder: the class itself");
       card = itemView.findViewById(R.id.cardView);
       icon = itemView.findViewById(R.id.itemIcon);
       name = itemView.findViewById(R.id.titleText);
@@ -112,7 +86,127 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
       addToListB = itemView.findViewById(R.id.toShoppingListButton);
     }
 
+    public void bind() {
+      icon.setImageResource(data.get(getAdapterPosition()).icon);
+      name.setText(data.get(getAdapterPosition()).name);
+      category.setText(data.get(getAdapterPosition()).category);
+      number.setText(data.get(getAdapterPosition()).number.toString() + " left in pantry");
+      size.setText(data.get(getAdapterPosition()).size);
+      expiryDate.setText(data.get(getAdapterPosition()).expiryDate);
+      //Set the displayed counter till expiry text and color based on the difference to the current day
+      if (getDateDifferenceAsLong(expiryDate.getText().toString()) < daysTillExpiryWarning && getDateDifferenceAsLong(expiryDate.getText().toString()) > 0) {
+        expiryText.setText("Expires in " + getDateDifferenceAsString(expiryDate.getText().toString()) + " days");
+        expiryText.setTextColor(mResource.getColor(R.color.orange_warning, null));
+      } else if (getDateDifferenceAsLong(expiryDate.getText().toString()) < 1) {
+        expiryText.setText("Expired " + Math.abs(getDateDifferenceAsLong(expiryDate.getText().toString())) + " days ago");
+        expiryText.setTextColor(mResource.getColor(R.color.red_alert, null));
+      } else {
+        expiryText.setText("Expires in " + getDateDifferenceAsString(expiryDate.getText().toString()) + " days");
+        expiryText.setTextColor(mResource.getColor(R.color.blue_item, null));
+      }
+
+      if (Integer.parseInt(data.get(getAdapterPosition()).number.toString()) > 0 && Integer.parseInt(data.get(getAdapterPosition()).number.toString()) < 6) {
+        number.setTextColor(mResource.getColor(R.color.orange_warning, null));
+        expiryText.setVisibility(View.VISIBLE);
+      } else if (Integer.parseInt(data.get(getAdapterPosition()).number.toString()) < 1) {
+        number.setTextColor(mResource.getColor(R.color.red_alert, null));
+        expiryText.setVisibility(View.INVISIBLE);
+      } else {
+        number.setTextColor(mResource.getColor(R.color.blue_item, null));
+        expiryText.setVisibility(View.VISIBLE);
+      }
+
+      card.setOnClickListener(
+              view -> {
+                Log.i("ADAPTER", "onClick: TAPPED A CARD");
+                Toast.makeText(
+                        view.getContext(),
+                        data.get(getAdapterPosition()).name + " is clicked",
+                        Toast.LENGTH_SHORT)
+                    .show();
+              });
+
+      card.setOnLongClickListener(
+              view -> {
+                Log.i("ADAPTER", "onClick: LONG PRESSED A CARD");
+                Toast.makeText(
+                        view.getContext(),
+                        data.get(getAdapterPosition()).name + " is long clicked",
+                        Toast.LENGTH_SHORT)
+                    .show();
+                return true;
+              });
+
+      removeB.setOnClickListener(
+              view -> {
+                Log.i("ADAPTER", "onClick: REMOVE BUTTON");
+                mListener.onDelete(getAdapterPosition());
+              });
+
+      editB.setOnClickListener(
+              view -> {
+                Log.i("ADAPTER", "onClick: EDIT BUTTON");
+                mListener.onEdit(getAdapterPosition());
+              });
+
+      addToListB.setOnClickListener(
+              view -> {
+                Log.i("ADAPTER", "onClick: ADD TO SHOPPING LIST BUTTON");
+                mListener.onAddToList(getAdapterPosition());
+              });
+      }
   }
+
+  /**
+   * Calculates the amount of days.
+   * @param expiryDate the expiry date
+   * @return - the amount of days left as a string
+   */
+  public String getDateDifferenceAsString(String expiryDate) {
+    Date calendar = Calendar.getInstance().getTime();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+    try {
+      Date date2;
+      date2 = dateFormat.parse(expiryDate);
+      long difference = 99999;
+      if (date2 != null) {
+        difference = (date2.getTime() - calendar.getTime());
+      }
+      long differenceDates = difference / (24 * 60 * 60 * 1000);
+
+      return Long.toString(differenceDates);
+
+    } catch (Exception exception) {
+      Log.i("DATE", "Cannot find day difference as string");
+      return "null";
+    }
+  } // getDateDifferenceAsString
+
+  /**
+   * Calculates the date difference as a long.
+   * @param expiryDate the expiry date
+   * @return - amount of days left as a long value
+   */
+  public long getDateDifferenceAsLong(String expiryDate) {
+    Date calendar = Calendar.getInstance().getTime();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+    try {
+      Date date2;
+      date2 = dateFormat.parse(expiryDate);
+      long difference = 99999;
+      if (date2 != null) {
+        difference = (date2.getTime() - calendar.getTime());
+      }
+
+      return difference / (24 * 60 * 60 * 1000);
+
+    } catch (Exception exception) {
+      Log.i("DATE", "Cannot find day difference as long");
+      return 99999;
+    }
+  } // getDateDifferenceAsLong
 
 //  public ArrayList<Item> sortByAge(ArrayList<Item> data) {
 //    Collections.sort(data, new Comparator<Item>() {

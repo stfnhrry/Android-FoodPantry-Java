@@ -19,7 +19,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/addNewItemTitle"
+            android:id="@+id/AddNewItemTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed-medium"
@@ -38,7 +38,7 @@
             android:fontFamily="sans-serif-condensed-medium"
             android:text="Cancel"
             android:textColor="#0A84FF"
-            app:layout_constraintEnd_toStartOf="@+id/addNewItemTitle"
+            app:layout_constraintEnd_toStartOf="@+id/AddNewItemTitle"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +53,7 @@
             android:textColor="#0A84FF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/addNewItemTitle"
+            app:layout_constraintStart_toEndOf="@+id/AddNewItemTitle"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -26,11 +25,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigationrail.NavigationRailView;
@@ -39,9 +36,13 @@ import com.google.gson.reflect.TypeToken;
 import com.nambimobile.widgets.efab.ExpandableFab;
 import com.nambimobile.widgets.efab.FabOption;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -55,9 +56,8 @@ public class MainActivity extends AppCompatActivity  {
   public static PantryFragment itemViews;
   Toast lastToast;
 
-  SaveFile hashMapFile = new SaveFile();
-  Map<Integer, String[]> map = hashMapFile.pantry;
-  ArrayList<Item> data = hashMapFile.data;
+  Map<Integer, String[]> map = SaveFile.pantry;
+  ArrayList<Item> data = SaveFile.data;
 
   BottomNavigationView navigationBar;
   NavigationRailView navRail;
@@ -65,19 +65,16 @@ public class MainActivity extends AppCompatActivity  {
   NavigationView navDrawer;
 
   NavController navController;
-  Integer dataSize = 0;
 
-  Dialog addDialog;
-  Dialog editDialog;
+  Dialog addNewItemDialog;
+  Dialog editItemDialog;
   boolean isEveryFieldChecked = false;
-  Button addButton;
-  Button closeButton;
-  EditText name;
-  EditText amount;
-  EditText weight;
-  EditText expDate;
-
-//  ArrayList<Item> data = new ArrayList<>();
+  Button confirmDialogActionButton;
+  Button closeDialogButton;
+  EditText nameEditField;
+  EditText amountEditField;
+  EditText sizeEditField;
+  EditText expiryDateEditField;
 
   Integer dataNum;
 
@@ -109,45 +106,42 @@ public class MainActivity extends AppCompatActivity  {
     setModalNavigationDrawerItemOnClicks(modalNavDrawer);
     setNavigationDrawerItemOnClicks(navDrawer);
 
-    //onCreateDemoView stuff
     DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
     View bottomNav = findViewById(R.id.coordinatorLayout);
-    ExpandableFab fab = findViewById(R.id.fab);
-    FabOption addItem = findViewById(R.id.faboption_1);
-    FabOption removeItem = findViewById(R.id.faboption_3);
-    ExtendedFloatingActionButton navFab = findViewById(R.id.nav_fab);
+    ExpandableFab bottomNavFab = findViewById(R.id.fab);
+    FabOption fabOptionOne = findViewById(R.id.faboption_1);
+    FabOption fabOptionThree = findViewById(R.id.faboption_3);
+    ExtendedFloatingActionButton navRailFab = findViewById(R.id.nav_fab);
 
     Configuration configuration = getResources().getConfiguration();
     FragmentManager fragmentManager = getSupportFragmentManager();
 
-
-    addItem.setOnClickListener(new View.OnClickListener() {
+    fabOptionOne.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         showAddItemDialog();
       }
     });
-    navFab.setOnClickListener(new View.OnClickListener() {
+    navRailFab.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         showAddItemDialog();
       }
     });
-    removeItem.setOnClickListener(new View.OnClickListener() {
+    fabOptionThree.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         data.clear();
-        itemViews.adapter.notifyDataSetChanged();
+        PantryFragment.adapter.notifyDataSetChanged();
         map.clear();
         saveHashmapToPreferences();
-        loadFromHashmap();
       }
     });
 
     // Update navigation views according to screen width size.
     int screenWidth = configuration.screenWidthDp;
     AdaptiveUtils.updateNavigationViewLayout(
-            screenWidth, drawerLayout, modalNavDrawer, fab, bottomNav, navRail, navDrawer, navFab);
+            screenWidth, drawerLayout, modalNavDrawer, bottomNavFab, bottomNav, navRail, navDrawer, navRailFab);
 
     // Clear backstack to prevent unexpected behaviors when pressing back button.
     int backStackEntryCount = fragmentManager.getBackStackEntryCount();
@@ -216,109 +210,158 @@ public class MainActivity extends AppCompatActivity  {
    */
   public void showAddItemDialog() {
     Log.i("SAVE", "Show add item dialog");
-    addDialog = new Dialog(this);
-    addDialog.setContentView(R.layout.add_item_dialog);
+    addNewItemDialog = new Dialog(this);
+    addNewItemDialog.setContentView(R.layout.add_item_dialog);
 
-    addButton = addDialog.findViewById(R.id.confirmButton);
-    closeButton = addDialog.findViewById(R.id.cancelButton);
-    name = addDialog.findViewById(R.id.editName);
-    amount = addDialog.findViewById(R.id.editAmount);
-    weight = addDialog.findViewById(R.id.editSize);
-    weight.setText("10kg");
-    expDate = addDialog.findViewById(R.id.editDate);
-    expDate.setText("21/02/2022");
+    confirmDialogActionButton = addNewItemDialog.findViewById(R.id.confirmButton);
+    closeDialogButton = addNewItemDialog.findViewById(R.id.cancelButton);
+    nameEditField = addNewItemDialog.findViewById(R.id.editName);
+    amountEditField = addNewItemDialog.findViewById(R.id.editAmount);
+    amountEditField.setText("2");
+    sizeEditField = addNewItemDialog.findViewById(R.id.editSize);
+    sizeEditField.setText("10kg");
+    expiryDateEditField = addNewItemDialog.findViewById(R.id.editDate);
+    expiryDateEditField.setText("21/02/2022");
 
-    Spinner categorySpinner = addDialog.findViewById(R.id.spinner);
+    Spinner categorySpinner = addNewItemDialog.findViewById(R.id.spinner);
     ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
     categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     categorySpinner.setAdapter(categoryAdapter);
 
-    addButton.setOnClickListener(new View.OnClickListener() {
+    confirmDialogActionButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         isEveryFieldChecked = checkAllFields();
 
         if (isEveryFieldChecked) {
-          int image = setIconFromCategory(categorySpinner);
-          String nameString = name.getText().toString();
+          String nameString = nameEditField.getText().toString();
           String categoryString = categorySpinner.getSelectedItem().toString();
-          int amountInteger = Integer.parseInt(amount.getText().toString());
-          String weightString = weight.getText().toString();
-          String expDateString = expDate.getText().toString();
+          int amountInteger = Integer.parseInt(amountEditField.getText().toString());
+          String weightString = sizeEditField.getText().toString();
+          String expDateString = expiryDateEditField.getText().toString();
           addNewItem(nameString, categoryString, amountInteger, weightString, expDateString);
         }
       }
     });
 
-    closeButton.setOnClickListener(new View.OnClickListener() {
+    closeDialogButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        hideKeyboard(name);
-        addDialog.dismiss();
+        hideKeyboard(nameEditField);
+        addNewItemDialog.dismiss();
       }
     });
 
-    addDialog.show();
+    addNewItemDialog.show();
   } // showAddItemDialog
 
-  public void addNewItem(String name, String category, Integer number, String size, String expiryDate){
-
-    Log.i("SAVE", "Recycler view items (Before adding) are now: " + itemViews.pantryRecyclerView.getChildCount());
+  public void addNewItem(String name, String category, int amount, String weight, String expiryDate){
     dataNum = data.size();
-    Log.i("SAVE", "Adding item to this index: " + dataNum);
-    data.add(dataNum, new Item(name, category, number, size, expiryDate));
+    data.add(dataNum, new Item(name, category, amount, weight, expiryDate));
     itemViews.adapter.notifyItemInserted(dataNum);
-    Log.i("SAVE", "Recycler view items (Just after adding) are now: " + itemViews.pantryRecyclerView.getChildCount());
-    //    saveToArray(R.drawable.forkandspoon, name, category, number, size, expiryDate, dataSize);
-    if (itemViews.pantryRecyclerView == null) {
-      Log.i("SAVE", "recycler view is null");
-    }
-    else {
-      Log.i("SAVE", "recycler view is not null");
-    }
-    Log.i("SAVE", "recycler view (just before looking for how many) has this many items: " + itemViews.pantryRecyclerView.getChildCount());
-    if (itemViews.pantryRecyclerView.getChildAt(dataNum) == null) {
-      Log.i("SAVE", "recycler view child at " + dataNum + " is null");
-    }
-    else {
-      Log.i("SAVE", "recycler view child at " + dataNum + " is valid");
-    }
-
-
-//        itemViews.data.clear();
-//        map.clear();
-//    dataSize = itemViews.data.size();
-//    itemViews.data.add(dataSize, new Item(name, category, number, size, expiryDate));
-//    itemViews.adapter.notifyItemInserted(dataSize);
-//    itemViews.add(name, category, number, size, expiryDate);
-    Log.i("SAVE", "Recycler view items(Added to data, before adding to array) are now: " + itemViews.pantryRecyclerView.getChildCount());
-    saveToArray(R.drawable.forkandspoon, name, category, number, size, expiryDate, dataNum);
-//    itemViews.pantryRecyclerView.getChildAt(dataSize).findViewById(R.id.removeButton).setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        //code here
-//      }
-//    });
+    saveToArray(R.drawable.forkandspoon, name, category, amount, weight, expiryDate, dataNum);
   }
+
+  /**
+   * Shows the edit item dialog.
+   * @param index current card index
+   */
+  public void showEditItemDialog(int index) {
+    editItemDialog = new Dialog(this);
+    editItemDialog.setContentView(R.layout.edit_item_dialog);
+
+    confirmDialogActionButton = editItemDialog.findViewById(R.id.confirmButton);
+    closeDialogButton = editItemDialog.findViewById(R.id.cancelButton);
+
+    nameEditField = editItemDialog.findViewById(R.id.editName);
+    Spinner categorySelector = editItemDialog.findViewById(R.id.spinner);
+    ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
+    categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    categorySelector.setAdapter(categoryAdapter);
+    amountEditField = editItemDialog.findViewById(R.id.editAmount);
+    sizeEditField = editItemDialog.findViewById(R.id.editSize);
+    expiryDateEditField = editItemDialog.findViewById(R.id.editDate);
+
+    // Set the text in the fields to match the data on the items
+    nameEditField.setText(data.get(index).name);
+    for (int i = 0; i < (categorySelector.getCount()); i++) {
+      if (categorySelector.getItemAtPosition(i).toString().equalsIgnoreCase(data.get(index).category)) {
+        categorySelector.setSelection(i);
+      }
+    }
+    amountEditField.setText(data.get(index).number.toString());
+    sizeEditField.setText(data.get(index).size);
+    expiryDateEditField.setText(data.get(index).expiryDate);
+
+    confirmDialogActionButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        isEveryFieldChecked = checkAllFields();
+        if (isEveryFieldChecked) {
+          editItem(index, nameEditField.getText().toString(), categorySelector, Integer.parseInt(amountEditField.getText().toString()), sizeEditField.getText().toString(), expiryDateEditField.getText().toString());
+          hideKeyboard(nameEditField);
+          editItemDialog.dismiss();
+        }
+      }
+    });
+
+    closeDialogButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        hideKeyboard(nameEditField);
+        editItemDialog.dismiss();
+      }
+    });
+
+    editItemDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+      @Override
+      public void onDismiss(DialogInterface dialogInterface) {
+        hideKeyboard(nameEditField);
+      }
+    });
+    editItemDialog.show();
+  } // showEditItemDialog
+
+  /**
+   * Edits an item already in the pantry.
+   *
+   * @param index    - the index of the item
+   * @param name     - name of the item
+   * @param category - category of the item (can, jar, cookies,...)
+   * @param amount   - the amount in stock of the item
+   * @param size     - size of the item
+   * @param expDate  - expiry date of the item
+   */
+  public void editItem(int index, String name, Spinner category, Integer amount, String size, String expDate) {
+    data.set(index, new Item(name, category.getSelectedItem().toString(), amount, size, expDate));
+    itemViews.adapter.notifyItemChanged(index);
+
+    String iconString = Integer.toString(data.get(index).icon);
+    String amountString = amount.toString();
+    String[] temp = new String[6];
+    temp[0] = iconString;
+    temp[1] = name;
+    temp[2] = category.getSelectedItem().toString();
+    temp[3] = amountString;
+    temp[4] = size;
+    temp[5] = expDate;
+
+    map.replace(index, temp);
+    saveHashmapToPreferences();
+  } // editItem
 
   /**
    * Removes an item from the pantry.
    * @param index the index of the current card to be removed
    */
   public void removeItemFromPantry(int index) {
-    Log.i("SAVE", "Remove item from hashmap at index " + index);
-    Log.i("SAVE", "Hashmap is currently " + map);
-//    cardLayout.removeViewAt(index);
-//    itemViews.data.remove(index);
-//    itemViews.adapter.notifyItemRemoved(index);
+    data.remove(index);
+    itemViews.adapter.notifyItemRemoved(index);
     map.remove(index);
-    Log.i("SAVE", "Hashmap is now " + map);
 
     int id = 0;
     HashMap<Integer, String[]> tempMap = new HashMap<Integer, String[]>();
-
     Set<Map.Entry<Integer, String[]>> entries = map.entrySet();
-
     Iterator<Map.Entry<Integer, String[]>> iterator =
             entries.iterator();
 
@@ -327,14 +370,11 @@ public class MainActivity extends AppCompatActivity  {
       Integer key = entry.getKey();
       String[] value = entry.getValue();
 
-      Log.i("SAVE", "Hashmap index " + key + " is " + value);
-
       tempMap.put(id, value);
       id++;
     }
     map = tempMap;
     saveHashmapToPreferences();
-//    refreshAllItems();
 //    if (inRemovingMode == true) {
 //      setRemoveModeActive();
 //    } else {
@@ -342,59 +382,17 @@ public class MainActivity extends AppCompatActivity  {
 //    }
   } // removeItemFromPantry
 
-  public void loadNewItem(int icon, String name, String category, int amount, String weight, String expDate) {
-//    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//    transaction.add(cardLayout.getId(), ItemFragment.newInstance(icon, name, category, amount, weight, expDate));
-//    transaction.commitNow();
-    itemViews.add(name, category, amount, weight, expDate);
-//    saveToArray(R.drawable.forkandspoon, name, category, amount, weight, expDate, dataSize);
-
-////    numItems = cardLayout.getChildCount();
-//    numItems = pantryRecyclerView.getChildCount();
-//
-//    View card = pantryRecyclerView.getChildAt(numItems - 1);
-//    ImageButton removeItemButton = pantryRecyclerView.getChildAt(numItems - 1).findViewById(R.id.removeButton);
-//    TextView cardText = pantryRecyclerView.getChildAt(numItems - 1).findViewById(R.id.titleText);
-//    ImageButton editButton = card.findViewById(R.id.editButton);
-//    ImageButton addToShopButton = pantryRecyclerView.getChildAt(numItems - 1).findViewById(R.id.toShoppingListButton);
-//    removeItemButton.setVisibility(View.GONE);
-//    int id = numItems - 1;
-//
-//    editButton.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-////        showEditItemDialog(card);
-//      }
-//    });
-//    addToShopButton.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View v) {
-////        addToCart(card);
-////        showToast("Item has been added to shopping list");
-//
-//        addToShopButton.setEnabled(false);
-//        addToShopButton.postDelayed(new Runnable() {
-//          @Override
-//          public void run() {
-//            addToShopButton.setEnabled(true);
-//            Log.d(TAG, "disabled button");
-//          }
-//        }, 500);
-//      }
-//
-//    });
-//    removeItemButton.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View v) {
-////        removeItemFromPantry(id);
-//      }
-//    });
+  public void loadNewItem(int icon, String name, String category, int amount, String weight, String expiryDate) {
+    dataNum = data.size();
+    data.add(dataNum, new Item(name, category, amount, weight, expiryDate));
+//    itemViews.adapter.notifyItemInserted(dataNum);
+//    saveToArray(R.drawable.forkandspoon, name, category, amount, weight, expiryDate, dataNum);
   }
 
-  public void saveToArray(int icon, String name, String category, int amount, String weight, String expDate, int index) {
+  public void saveToArray(Integer icon, String name, String category, Integer amount, String weight, String expDate, int index) {
     Log.i("SAVE", "saveToArray");
-    String iconString = icon + "";
-    String amountString = amount + "";
+    String iconString = icon.toString();
+    String amountString = amount.toString();
     String[] temp = new String[6];
     temp[0] = iconString;
     temp[1] = name;
@@ -440,7 +438,7 @@ public class MainActivity extends AppCompatActivity  {
   } // saveHashmapToPreferences
 
   /**
-   * Loads information from the hasmap.
+   * Loads information from the hashmap.
    */
   public void loadFromHashmap() {
     Log.i("SAVE", "Load from hashmap");
@@ -463,9 +461,8 @@ public class MainActivity extends AppCompatActivity  {
   } // loadFromHashmap
 
   public void refreshAllItems() {
-    RecyclerView pantryRecyclerView = findViewById(R.id.recyclerView);
-//    pantryRecyclerView.removeAllViewsInLayout();
-//    itemViews.data.clear();
+    data.clear();
+    PantryFragment.adapter.notifyDataSetChanged();
     loadFromHashmap();
   } // refreshAllItems
 
@@ -591,20 +588,20 @@ public class MainActivity extends AppCompatActivity  {
    * @return - true if all fields are not 0, false otherwise
    */
   public boolean checkAllFields() {
-    if (name.length() == 0) {
-      name.setError("This field is required");
+    if (nameEditField.length() == 0) {
+      nameEditField.setError("This field is required");
       return false;
     }
-    if (amount.length() == 0) {
-      amount.setError("This field is required");
+    if (amountEditField.length() == 0) {
+      amountEditField.setError("This field is required");
       return false;
     }
-    if (weight.length() == 0) {
-      weight.setError("This field is required");
+    if (sizeEditField.length() == 0) {
+      sizeEditField.setError("This field is required");
       return false;
     }
-    if (expDate.length() == 0) {
-      expDate.setError("This field is required");
+    if (expiryDateEditField.length() == 0) {
+      expiryDateEditField.setError("This field is required");
       return false;
     }
     return true;
@@ -652,5 +649,50 @@ public class MainActivity extends AppCompatActivity  {
     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
   } // hideKeyboard
+
+  /**
+   * Calculates the amount of days.
+   * @param expiryDate the expiry date
+   * @return - the amount of days left as a string
+   */
+  public String getDateDifferenceAsString(String expiryDate) {
+    Date calendar = Calendar.getInstance().getTime();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+    try {
+      Date date2;
+      date2 = dateFormat.parse(expiryDate);
+      long difference = (date2.getTime() - calendar.getTime());
+      long differenceDates = difference / (24 * 60 * 60 * 1000);
+
+      return Long.toString(differenceDates);
+
+    } catch (Exception exception) {
+      Log.i("DATE", "Cannot find day difference as string");
+      return "null";
+    }
+  } // getDateDifferenceAsString
+
+  /**
+   * Calculates the date difference as a long.
+   * @param expiryDate the expiry date
+   * @return - amount of days left as a long value
+   */
+  public long getDateDifferenceAsLong(String expiryDate) {
+    Date calendar = Calendar.getInstance().getTime();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+    try {
+      Date date2;
+      date2 = dateFormat.parse(expiryDate);
+      long difference = (date2.getTime() - calendar.getTime());
+
+      return difference / (24 * 60 * 60 * 1000);
+
+    } catch (Exception exception) {
+      Log.i("DATE", "Cannot find day difference as long");
+      return 99999;
+    }
+  } // getDateDifferenceAsLong
 
 }

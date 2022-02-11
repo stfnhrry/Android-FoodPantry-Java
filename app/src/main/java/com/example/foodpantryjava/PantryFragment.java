@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +42,7 @@ public class PantryFragment extends Fragment {
     pantryRecyclerView = view.findViewById(R.id.recyclerView);
     pantryRecyclerView.setHasFixedSize(true);
     setNumberOfColumnsBasedOnScreenWidth();
-    pantryRecyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), columns, LinearLayoutManager.VERTICAL, false));
+    pantryRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL));
     Decoration decoration = new Decoration(8);
     pantryRecyclerView.addItemDecoration(decoration);
     adapter = new AdapterClass(
@@ -68,7 +67,7 @@ public class PantryFragment extends Fragment {
               public void onAddToList(int position) {
                 if (getActivity() != null) {
                   Log.i("PANTRY FRAGMENT", "Item was added to shopping list");
-//                  ((MainActivity)getActivity()).addToShoppingList(position);
+                  ((MainActivity)getActivity()).showAddToShoppingListDialog(position);
                 }
               }
             }, getResources());

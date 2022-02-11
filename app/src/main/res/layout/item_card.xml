@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
-    style="@style/Widget.Material3.CardView.Filled"
+    style="?attr/materialCardViewElevatedStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="16dp"
@@ -18,7 +18,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/barrier"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/categoryText"
             app:srcCompat="@drawable/ic_baseline_cookie_24"
@@ -29,19 +29,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif-condensed-medium"
             android:text="FoodName"
             android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/expiryText"
             app:layout_constraintStart_toEndOf="@+id/itemIcon"
-            app:layout_constraintTop_toBottomOf="@+id/categoryText"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread" />
 
         <TextView
             android:id="@+id/categoryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:paddingVertical="1dp"
+            android:paddingBottom="2dp"
             android:text="Cans"
             android:textColor="#C6C6C6"
             android:textSize="16sp"
@@ -53,9 +56,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:fontFamily="sans-serif-condensed-medium"
             android:text="Expires in 30 days"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/barrier"
             app:layout_constraintStart_toEndOf="@+id/itemIcon"
             app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
@@ -74,54 +78,77 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:fontFamily="sans-serif-condensed-medium"
             android:text="10kg"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/amountText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toShoppingListButton"
-            app:layout_constraintVertical_bias="0.68" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/amountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
+            android:fontFamily="sans-serif-condensed-medium"
             android:text="12 left in pantry"
             android:textSize="14sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/expiryText"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <ImageButton
-            android:id="@+id/editButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_outline_create_24" />
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="itemIcon,expiryText"
+            tools:layout_editor_absoluteY="92dp" />
 
-        <ImageButton
+        <Button
             android:id="@+id/toShoppingListButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="2dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/editButton"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/btn_star_big_off" />
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/add_to_shopping_list"
+            android:textSize="13sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/editButton"
+            app:layout_constraintTop_toTopOf="@+id/barrier" />
 
-        <ImageButton
-            android:id="@+id/removeButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
+        <Button
+            android:id="@+id/editButton"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/edit"
+            android:textSize="13sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/toShoppingListButton"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/cautionsign" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/removeButton"
+            app:layout_constraintTop_toTopOf="@+id/barrier"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/removeButton"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="@string/remove"
+            android:textSize="13sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/editButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/barrier" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

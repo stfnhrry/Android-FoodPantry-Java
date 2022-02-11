@@ -5,17 +5,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -28,7 +27,6 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
     void onAddToList(int position);
   }
   private final itemCardListener mListener;
-  ArrayList<Item> data = SaveFile.data;
   Resources mResource;
 
   static int daysTillExpiryWarning = 30;
@@ -62,14 +60,14 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
 
   @Override
   public int getItemCount() {
-    return data.size();
+    return SaveFile.data.size();
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
     ImageView icon;
     TextView name, category, number, size, expiryDate, expiryText;
     CardView card;
-    ImageButton removeB, editB, addToListB;
+    MaterialButton removeB, editB, addToListB;
     public ViewHolder (@NonNull View itemView) {
       super(itemView);
       Log.i("ADAPTER", "ViewHolder: the class itself");
@@ -87,12 +85,12 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
     }
 
     public void bind() {
-      icon.setImageResource(data.get(getAdapterPosition()).icon);
-      name.setText(data.get(getAdapterPosition()).name);
-      category.setText(data.get(getAdapterPosition()).category);
-      number.setText(data.get(getAdapterPosition()).number.toString() + " left in pantry");
-      size.setText(data.get(getAdapterPosition()).size);
-      expiryDate.setText(data.get(getAdapterPosition()).expiryDate);
+      icon.setImageResource(SaveFile.data.get(getAdapterPosition()).icon);
+      name.setText(SaveFile.data.get(getAdapterPosition()).name);
+      category.setText(SaveFile.data.get(getAdapterPosition()).category);
+      number.setText(SaveFile.data.get(getAdapterPosition()).number.toString() + " left in pantry");
+      size.setText(SaveFile.data.get(getAdapterPosition()).size);
+      expiryDate.setText(SaveFile.data.get(getAdapterPosition()).expiryDate);
       //Set the displayed counter till expiry text and color based on the difference to the current day
       if (getDateDifferenceAsLong(expiryDate.getText().toString()) < daysTillExpiryWarning && getDateDifferenceAsLong(expiryDate.getText().toString()) > 0) {
         expiryText.setText("Expires in " + getDateDifferenceAsString(expiryDate.getText().toString()) + " days");
@@ -105,10 +103,10 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
         expiryText.setTextColor(mResource.getColor(R.color.blue_item, null));
       }
 
-      if (Integer.parseInt(data.get(getAdapterPosition()).number.toString()) > 0 && Integer.parseInt(data.get(getAdapterPosition()).number.toString()) < 6) {
+      if (Integer.parseInt(SaveFile.data.get(getAdapterPosition()).number.toString()) > 0 && Integer.parseInt(SaveFile.data.get(getAdapterPosition()).number.toString()) < 6) {
         number.setTextColor(mResource.getColor(R.color.orange_warning, null));
         expiryText.setVisibility(View.VISIBLE);
-      } else if (Integer.parseInt(data.get(getAdapterPosition()).number.toString()) < 1) {
+      } else if (Integer.parseInt(SaveFile.data.get(getAdapterPosition()).number.toString()) < 1) {
         number.setTextColor(mResource.getColor(R.color.red_alert, null));
         expiryText.setVisibility(View.INVISIBLE);
       } else {
@@ -119,28 +117,28 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
       card.setOnClickListener(
               view -> {
                 Log.i("ADAPTER", "onClick: TAPPED A CARD");
-                Toast.makeText(
-                        view.getContext(),
-                        data.get(getAdapterPosition()).name + " is clicked",
-                        Toast.LENGTH_SHORT)
-                    .show();
+                if (removeB.getVisibility() == View.VISIBLE){
+                  removeB.setVisibility(View.GONE);
+                  editB.setVisibility(View.GONE);
+                  addToListB.setVisibility(View.GONE);
+                } else{
+                  removeB.setVisibility(View.VISIBLE);
+                  editB.setVisibility(View.VISIBLE);
+                  addToListB.setVisibility(View.VISIBLE);
+                }
               });
 
       card.setOnLongClickListener(
               view -> {
                 Log.i("ADAPTER", "onClick: LONG PRESSED A CARD");
-                Toast.makeText(
-                        view.getContext(),
-                        data.get(getAdapterPosition()).name + " is long clicked",
-                        Toast.LENGTH_SHORT)
-                    .show();
                 return true;
               });
 
-      removeB.setOnClickListener(
+      removeB.setOnLongClickListener(
               view -> {
                 Log.i("ADAPTER", "onClick: REMOVE BUTTON");
                 mListener.onDelete(getAdapterPosition());
+                return true;
               });
 
       editB.setOnClickListener(

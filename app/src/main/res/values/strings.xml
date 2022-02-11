@@ -5,6 +5,18 @@
     <string name="pantry_fragment">Pantry Fragment</string>
     <string name="search_fragment">Search Fragment</string>
     <string name="shopping_list_fragment">Shopping List Fragment</string>
+    <string name="delete_all_items_title">Delete all items?</string>
+    <string name="delete_all_items_message">This will remove all items from the pantry.\n\nTHIS ACTION CANNOT BE UNDONE.</string>
+    <string name="cancel">Cancel</string>
+    <string name="decline">Decline</string>
+    <string name="remove">Remove</string>
+    <string name="delete">Delete</string>
+    <string name="delete_all">Delete All</string>
+    <string name="accept">Accept</string>
+    <string name="save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="add_to_shopping_list">Add To List</string>
+    <string name="add_new_item">Add New Item</string>
 
     <string-array name="categories">
         <item>CANS</item>

@@ -66,7 +66,10 @@ public class Item {
     try {
       Date date2;
       date2 = dateFormat.parse(expiryDate);
-      long difference = (date2.getTime() - calendar.getTime());
+      long difference = 99999;
+      if (date2 != null) {
+        difference = (date2.getTime() - calendar.getTime());
+      }
       long differenceDates = difference / (24 * 60 * 60 * 1000);
 
       return Long.toString(differenceDates);

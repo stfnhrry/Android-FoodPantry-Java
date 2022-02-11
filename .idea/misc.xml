@@ -3,10 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.2175" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.2175" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_add_circle_outline_24.xml" value="0.2175" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_cookie_24.xml" value="0.5199134199134199" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.319" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_error_24.xml" value="0.2175" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_food_bank_24.xml" value="0.309" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.5109375" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_baseline_remove_24.xml" value="0.2175" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_create_24dp.xml" value="0.319" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_outline_create_24.xml" value="0.319" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/drawable/ic_search_black_24dp.xml" value="0.309" />

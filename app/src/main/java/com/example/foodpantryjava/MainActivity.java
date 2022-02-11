@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity  {
     fabOptionThree.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        confirmDeleteAllPantryItems();
+        showDeleteAllItemsDialog();
       }
     });
 
@@ -215,6 +215,12 @@ public class MainActivity extends AppCompatActivity  {
     lastToast = toast;
   } // showToast
 
+  public void addItem(String name, String category, int amount, String weight, String expiryDate) {
+    int dataIndex = SaveFile.data.size();
+    SaveFile.data.add(dataIndex, new Item(name, category, amount, weight, expiryDate));
+    PantryFragment.adapter.notifyItemInserted(dataIndex);
+  }
+
   /**
    * Shows the add item dialog.
    */
@@ -249,7 +255,7 @@ public class MainActivity extends AppCompatActivity  {
           int amountInteger = Integer.parseInt(amountEditField.getText().toString());
           String weightString = sizeEditField.getText().toString();
           String expDateString = expiryDateEditField.getText().toString();
-          addNewItem(nameString, categoryString, amountInteger, weightString, expDateString);
+          addNewItemToPantry(nameString, categoryString, amountInteger, weightString, expDateString);
         }
       }
     });
@@ -265,11 +271,10 @@ public class MainActivity extends AppCompatActivity  {
     addNewItemDialog.show();
   } // showAddItemDialog
 
-  public void addNewItem(String name, String category, int amount, String weight, String expiryDate){
-    int dataIndex = SaveFile.data.size();
-    SaveFile.data.add(dataIndex, new Item(name, category, amount, weight, expiryDate));
-    PantryFragment.adapter.notifyItemInserted(dataIndex);
-    saveToArray(R.drawable.forkandspoon, name, category, amount, weight, expiryDate, dataIndex);
+  public void addNewItemToPantry(String name, String category, int amount, String weight, String expiryDate){
+    int index = SaveFile.data.size();
+    addItem(name, category, amount, weight, expiryDate);
+    saveToArray(R.drawable.forkandspoon, name, category, amount, weight, expiryDate, index);
   }
 
   /**
@@ -360,6 +365,26 @@ public class MainActivity extends AppCompatActivity  {
     saveHashmapToPreferences();
   } // editItem
 
+  public void showRemoveItemDialog(int index){
+    MaterialAlertDialogBuilder deleteDialog = new MaterialAlertDialogBuilder(this);
+    deleteDialog.setTitle(getResources().getString(R.string.remove_item_title));
+    deleteDialog.setMessage(getResources().getString(R.string.remove_item_message));
+    deleteDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+        Log.i("DIALOG", "onClick: Negative button clicked");
+      }
+    });
+    deleteDialog.setPositiveButton(getResources().getString(R.string.remove), new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+        Log.i("DIALOG", "onClick: Positive button clicked");
+        removeItemFromPantry(index);
+      }
+    });
+    deleteDialog.show();
+  }
+
   /**
    * Removes an item from the pantry.
    * @param index the index of the current card to be removed
@@ -391,12 +416,6 @@ public class MainActivity extends AppCompatActivity  {
 //      setRemoveModeInactive();
 //    }
   } // removeItemFromPantry
-
-  public void loadNewItem(int icon, String name, String category, int amount, String weight, String expiryDate) {
-    int dataIndex = SaveFile.data.size();
-    SaveFile.data.add(dataIndex, new Item(name, category, amount, weight, expiryDate));
-    PantryFragment.adapter.notifyItemInserted(dataIndex);
-  }
 
   public void showAddToShoppingListDialog(int index){
     Dialog shoppingListDialog = new Dialog(this);
@@ -457,6 +476,33 @@ public class MainActivity extends AppCompatActivity  {
     saveShoppingListToPreferences();
   } // addToShoppingList
 
+  public void showDeleteAllItemsDialog(){
+    MaterialAlertDialogBuilder deleteAllDialog = new MaterialAlertDialogBuilder(this);
+    deleteAllDialog.setTitle(getResources().getString(R.string.delete_all_items_title));
+    deleteAllDialog.setMessage(getResources().getString(R.string.delete_all_items_message));
+    deleteAllDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+        Log.i("DIALOG", "onClick: Negative button clicked");
+      }
+    });
+    deleteAllDialog.setPositiveButton(getResources().getString(R.string.delete_all), new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+        Log.i("DIALOG", "onClick: Positive button clicked");
+        deleteAllPantryItems();
+      }
+    });
+    deleteAllDialog.show();
+  }
+
+  public void deleteAllPantryItems(){
+    SaveFile.data.clear();
+    PantryFragment.adapter.notifyDataSetChanged();
+    SaveFile.pantry.clear();
+    saveHashmapToPreferences();
+  }
+
   public void saveToArray(Integer icon, String name, String category, Integer amount, String weight, String expDate, int index) {
     Log.i("SAVE", "saveToArray");
     String iconString = icon.toString();
@@ -468,15 +514,15 @@ public class MainActivity extends AppCompatActivity  {
     temp[3] = amountString;
     temp[4] = weight;
     temp[5] = expDate;
-    saveToHashMap(index, temp);
+    saveItemToHashMap(index, temp);
   } // saveToArray
 
   /**
    * Loads a new item from the array.
    */
-  public void loadFromArray() {
+  public void loadItemsFromHashmap() {
     for (int i = 0; i < SaveFile.pantry.size(); i++) {
-      loadNewItem(Integer.parseInt(SaveFile.pantry.get(i)[0]), SaveFile.pantry.get(i)[1], SaveFile.pantry.get(i)[2], Integer.parseInt(SaveFile.pantry.get(i)[3]), SaveFile.pantry.get(i)[4], SaveFile.pantry.get(i)[5]);
+      addItem(SaveFile.pantry.get(i)[1], SaveFile.pantry.get(i)[2], Integer.parseInt(SaveFile.pantry.get(i)[3]), SaveFile.pantry.get(i)[4], SaveFile.pantry.get(i)[5]);
     }
   } // loadFromArray
 
@@ -485,7 +531,7 @@ public class MainActivity extends AppCompatActivity  {
    * @param index the index of the current card
    * @param ItemInfo the information in the current card
    */
-  public void saveToHashMap(int index, String[] ItemInfo) {
+  public void saveItemToHashMap(int index, String[] ItemInfo) {
     SaveFile.pantry.put(index, ItemInfo);
     saveHashmapToPreferences();
   } // saveToHashMap
@@ -508,7 +554,7 @@ public class MainActivity extends AppCompatActivity  {
   /**
    * Loads information from the hashmap.
    */
-  public void loadFromHashmap() {
+  public void loadHashMapFromPreferences() {
     Log.i("SAVE", "Load from hashmap");
     //get shared prefs
     SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
@@ -523,14 +569,14 @@ public class MainActivity extends AppCompatActivity  {
       }.getType();
       HashMap<Integer, String[]> testHashMap2 = gson.fromJson(storedHashMapString, type);
       SaveFile.pantry = testHashMap2;
-      loadFromArray();
+      loadItemsFromHashmap();
     }
-  } // loadFromHashmap
+  } // loadHashmapFromPrefs
 
   public void refreshAllItems() {
     SaveFile.data.clear();
     PantryFragment.adapter.notifyDataSetChanged();
-    loadFromHashmap();
+    loadHashMapFromPreferences();
   } // refreshAllItems
 
   /**
@@ -604,29 +650,6 @@ public class MainActivity extends AppCompatActivity  {
     SaveFile.list.clear();
     loadShoppingList();
   } // refreshShoppingList
-
-  public void confirmDeleteAllPantryItems(){
-    MaterialAlertDialogBuilder deleteDialog = new MaterialAlertDialogBuilder(this);
-    deleteDialog.setTitle(getResources().getString(R.string.delete_all_items_title));
-    deleteDialog.setMessage(getResources().getString(R.string.delete_all_items_message));
-    deleteDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialogInterface, int i) {
-        Log.i("DIALOG", "onClick: Negative button clicked");
-      }
-    });
-    deleteDialog.setPositiveButton(getResources().getString(R.string.delete_all), new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialogInterface, int i) {
-        Log.i("DIALOG", "onClick: Positive button clicked");
-        SaveFile.data.clear();
-        PantryFragment.adapter.notifyDataSetChanged();
-        SaveFile.pantry.clear();
-        saveHashmapToPreferences();
-      }
-    });
-    deleteDialog.show();
-  }
 
   public void setNavigationRailItemOnClicks(NavigationRailView navRail){
     navRail.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

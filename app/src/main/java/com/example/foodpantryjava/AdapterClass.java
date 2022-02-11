@@ -134,11 +134,10 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
                 return true;
               });
 
-      removeB.setOnLongClickListener(
+      removeB.setOnClickListener(
               view -> {
                 Log.i("ADAPTER", "onClick: REMOVE BUTTON");
                 mListener.onDelete(getAdapterPosition());
-                return true;
               });
 
       editB.setOnClickListener(

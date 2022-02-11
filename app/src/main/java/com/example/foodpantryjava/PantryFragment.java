@@ -51,7 +51,7 @@ public class PantryFragment extends Fragment {
               public void onDelete(int position) {
                 if (getActivity() != null) {
                   Log.i("PANTRY FRAGMENT", "Item was deleted");
-                  ((MainActivity)getActivity()).removeItemFromPantry(position);
+                  ((MainActivity)getActivity()).showRemoveItemDialog(position);
                 }
               }
 

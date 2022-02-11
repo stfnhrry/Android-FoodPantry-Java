@@ -10,7 +10,6 @@
 
     <ImageButton
         android:id="@+id/nav_button"
-        style="?attr/borderlessButtonStyle"
         android:layout_width="@dimen/mtrl_min_touch_target_size"
         android:layout_height="@dimen/mtrl_min_touch_target_size"
         android:layout_gravity="start"
@@ -27,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:icon="@drawable/ic_create_24dp"
-        android:text="Add/remove items"/>
+        android:onClick="showAdd"
+        android:text="Add/remove items"
+        app:icon="@drawable/ic_create_24dp" />
 </LinearLayout>

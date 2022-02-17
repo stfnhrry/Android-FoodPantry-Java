@@ -18,28 +18,28 @@
             android:id="@+id/tab_item_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="tab_1" />
+            android:text="All" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_item_lowInStock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="tab_2" />
+            android:text="Low In Stock" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="tab_3" />
+            android:text="Out Of Stock" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="tab_4" />
+            android:text="Expiring Soon" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="tab_5" />
+            android:text="Expired" />
 
     </com.google.android.material.tabs.TabLayout>
 

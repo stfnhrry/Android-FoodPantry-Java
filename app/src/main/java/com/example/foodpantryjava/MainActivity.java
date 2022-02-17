@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
@@ -114,6 +116,7 @@ public class MainActivity extends AppCompatActivity  {
     View bottomNav = findViewById(R.id.coordinatorLayout);
     ExpandableFab bottomNavFab = findViewById(R.id.fab);
     FabOption fabOptionOne = findViewById(R.id.faboption_1);
+    FabOption fabOptionTwo = findViewById(R.id.faboption_2);
     FabOption fabOptionThree = findViewById(R.id.faboption_3);
     ExtendedFloatingActionButton navRailFab = findViewById(R.id.nav_fab);
 
@@ -126,12 +129,19 @@ public class MainActivity extends AppCompatActivity  {
         showAddItemDialog();
       }
     });
-//    navRailFab.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        showAddItemDialog();
-//      }
-//    });
+    //    navRailFab.setOnClickListener(new View.OnClickListener() {
+    //      @Override
+    //      public void onClick(View view) {
+    //        showAddItemDialog();
+    //      }
+    //    });
+    fabOptionTwo.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            PantryFragment.adapter.getFilter().filter("l");
+          }
+        });
     fabOptionThree.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -149,6 +159,32 @@ public class MainActivity extends AppCompatActivity  {
     for (int entry = 0; entry < backStackEntryCount; entry++) {
       fragmentManager.popBackStack();
     }
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    Log.i("SEARCH", "onCreateView: ");
+    getMenuInflater().inflate(R.menu.top_app_bar_search, menu);
+
+    MenuItem menuItem = menu.findItem(R.id.action_search);
+    final SearchView searchView = (SearchView) menuItem.getActionView();
+    searchView.setQueryHint("Type here to search");
+    searchView.setOnQueryTextListener(
+            new SearchView.OnQueryTextListener() {
+              @Override
+              public boolean onQueryTextSubmit(String query) {
+                return false;
+              }
+
+              @Override
+              public boolean onQueryTextChange(String newText) {
+                Log.i("SEARCH ", "onQueryTextChange: " + newText);
+                PantryFragment.adapter.getFilter().filter(newText);
+                return false;
+              }
+            });
+
+    return super.onCreateOptionsMenu(menu);
   }
 
   @Override

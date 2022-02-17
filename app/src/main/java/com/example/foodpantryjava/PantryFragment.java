@@ -8,9 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import com.google.android.material.tabs.TabLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 public class PantryFragment extends Fragment {
 
   public static RecyclerView pantryRecyclerView;
+  ActionMenuItemView searchView;
 
   int minCardWidth = 293;
   Integer columns = 1;
@@ -72,12 +76,42 @@ public class PantryFragment extends Fragment {
               }
             }, getResources());
     pantryRecyclerView.setAdapter(adapter);
-    return view;
-  }
 
-  @Override
-  public void onDestroy(){
-    super.onDestroy();
+    TabLayout tabLayout = view.findViewById(R.id.tab_layout);
+    tabLayout.addOnTabSelectedListener(
+        new TabLayout.OnTabSelectedListener() {
+          @Override
+          public void onTabSelected(TabLayout.Tab tab) {
+            switch (tab.getPosition()) {
+              case 0:
+                adapter.showAllItems();
+                break;
+              case 1:
+                Log.i("SEARCH", "onTabSelected: Low in stock");
+                adapter.showLowInStockItems();
+                break;
+              case 2:
+                adapter.showOutOfStockItems();
+                break;
+              case 3:
+                adapter.showExpiringSoonItems();
+                break;
+              case 4:
+                adapter.showExpiredItems();
+                break;
+            }
+            if (tab.getPosition() != 100) {
+              Log.i("SEARCH", "onTabSelected: " + tab.getPosition());
+            }
+          }
+          @Override
+          public void onTabUnselected(TabLayout.Tab tab) {}
+
+          @Override
+          public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+    return view;
   }
 
   private void setNumberOfColumnsBasedOnScreenWidth(){

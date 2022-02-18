@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,11 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
-public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> {
+public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> implements Filterable {
   //Listener for implementing functions on clicking item cards
   public interface itemCardListener {
     void onDelete(int position);
@@ -28,12 +32,16 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
   }
   private final itemCardListener mListener;
   Resources mResource;
+  List<Item> list;
+  List<Item> originalList;
 
   static int daysTillExpiryWarning = 30;
 
   public AdapterClass(itemCardListener listener, Resources resources) {
     mListener = listener;
     mResource = resources;
+    originalList = SaveFile.data;
+    list = SaveFile.data;
   }
 
   @NonNull
@@ -60,7 +68,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
 
   @Override
   public int getItemCount() {
-    return SaveFile.data.size();
+    return list.size();
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
@@ -85,12 +93,17 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
     }
 
     public void bind() {
-      icon.setImageResource(SaveFile.data.get(getAdapterPosition()).icon);
-      name.setText(SaveFile.data.get(getAdapterPosition()).name);
-      category.setText(SaveFile.data.get(getAdapterPosition()).category);
-      number.setText(SaveFile.data.get(getAdapterPosition()).number.toString() + " left in pantry");
-      size.setText(SaveFile.data.get(getAdapterPosition()).size);
-      expiryDate.setText(SaveFile.data.get(getAdapterPosition()).expiryDate);
+      if (removeB.getVisibility() == View.VISIBLE){
+        removeB.setVisibility(View.GONE);
+        editB.setVisibility(View.GONE);
+        addToListB.setVisibility(View.GONE);
+      }
+      icon.setImageResource(list.get(getAdapterPosition()).icon);
+      name.setText(list.get(getAdapterPosition()).name);
+      category.setText(list.get(getAdapterPosition()).category);
+      number.setText(list.get(getAdapterPosition()).number.toString() + " left in pantry");
+      size.setText(list.get(getAdapterPosition()).size);
+      expiryDate.setText(list.get(getAdapterPosition()).expiryDate);
       //Set the displayed counter till expiry text and color based on the difference to the current day
       if (getDateDifferenceAsLong(expiryDate.getText().toString()) < daysTillExpiryWarning && getDateDifferenceAsLong(expiryDate.getText().toString()) > 0) {
         expiryText.setText("Expires in " + getDateDifferenceAsString(expiryDate.getText().toString()) + " days");
@@ -103,10 +116,10 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
         expiryText.setTextColor(mResource.getColor(R.color.blue_item, null));
       }
 
-      if (Integer.parseInt(SaveFile.data.get(getAdapterPosition()).number.toString()) > 0 && Integer.parseInt(SaveFile.data.get(getAdapterPosition()).number.toString()) < 6) {
+      if (Integer.parseInt(list.get(getAdapterPosition()).number.toString()) > 0 && Integer.parseInt(list.get(getAdapterPosition()).number.toString()) < 6) {
         number.setTextColor(mResource.getColor(R.color.orange_warning, null));
         expiryText.setVisibility(View.VISIBLE);
-      } else if (Integer.parseInt(SaveFile.data.get(getAdapterPosition()).number.toString()) < 1) {
+      } else if (Integer.parseInt(list.get(getAdapterPosition()).number.toString()) < 1) {
         number.setTextColor(mResource.getColor(R.color.red_alert, null));
         expiryText.setVisibility(View.INVISIBLE);
       } else {
@@ -161,7 +174,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
    */
   public String getDateDifferenceAsString(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
 
     try {
       Date date2;
@@ -187,7 +200,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
    */
   public long getDateDifferenceAsLong(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
 
     try {
       Date date2;
@@ -218,4 +231,147 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
 //    });
 //    return data;
 //  }
+
+  public void showAllItems() {
+    if (originalList.size() == SaveFile.data.size())  {
+      //null condition
+    } else {
+      originalList = SaveFile.data;
+      list = originalList;
+      notifyDataSetChanged();
+    }
+  }
+
+  public void showLowInStockItems() {
+    List<Item> results = new ArrayList<>();
+    for (Item item : SaveFile.data) {
+      if (item.number < 6 && item.number > 0) {
+        results.add(item);
+      }
+    }
+    originalList = results;
+    list = originalList;
+    notifyDataSetChanged();
+  }
+
+  public void showOutOfStockItems() {
+    List<Item> results = new ArrayList<>();
+    for (Item item : SaveFile.data) {
+      if (item.number < 1) {
+        results.add(item);
+      }
+    }
+    originalList = results;
+    list = originalList;
+    notifyDataSetChanged();
+  }
+
+  public void showExpiringSoonItems() {
+    List<Item> results = new ArrayList<>();
+    for (Item item : SaveFile.data) {
+      if (getDateDifferenceAsLong(item.expiryDate) < 30 && getDateDifferenceAsLong(item.expiryDate) > 0) {
+        results.add(item);
+      }
+    }
+    originalList = results;
+    list = originalList;
+    notifyDataSetChanged();
+  }
+
+  public void showExpiredItems() {
+    List<Item> results = new ArrayList<>();
+    for (Item item : SaveFile.data) {
+      if (getDateDifferenceAsLong(item.expiryDate) < 1) {
+        results.add(item);
+      }
+    }
+    originalList = results;
+    list = originalList;
+    notifyDataSetChanged();
+  }
+
+
+  @Override
+  public Filter getFilter() {
+    return new Filter() {
+      @Override
+      protected FilterResults performFiltering(CharSequence charSequence) {
+        List<Item> filteredResults = null;
+        if (charSequence.length() == 0) {
+          filteredResults = originalList;
+        } else {
+          filteredResults =
+              getFilteredSearchResults(charSequence.toString().toLowerCase(Locale.getDefault()));
+        }
+        FilterResults results = new FilterResults();
+        results.values = filteredResults;
+        return results;
+      }
+
+      @Override
+      protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+        list = (List<Item>) filterResults.values;
+        notifyDataSetChanged();
+      }
+    };
+  }
+
+  public List<Item> getFilteredSearchResults(String constraint) {
+    List<Item> results = new ArrayList<>();
+
+    for (Item item : originalList) {
+      if (item.name.toLowerCase(Locale.getDefault()).contains(constraint)) {
+        results.add(item);
+      }
+    }
+    return results;
+  }
+
+  public List<Item> getAllItemsFilterResults() {
+    return originalList;
+  }
+
+  public List<Item> getLowInStockFilterResults() {
+    List<Item> results = new ArrayList<>();
+
+    for (Item item : originalList) {
+      if (item.number < 5) {
+        results.add(item);
+      }
+    }
+    return results;
+  }
+
+  public List<Item> getOutOfStockFilterResults() {
+    List<Item> results = new ArrayList<>();
+
+    for (Item item : originalList) {
+      if (item.number < 1) {
+        results.add(item);
+      }
+    }
+    return results;
+  }
+
+  public List<Item> getExpiringSoonFilterResults() {
+    List<Item> results = new ArrayList<>();
+
+    for (Item item : originalList) {
+      if (getDateDifferenceAsLong(item.expiryDate) < 30) {
+        results.add(item);
+      }
+    }
+    return results;
+  }
+
+  public List<Item> getExpiredFilterResults() {
+    List<Item> results = new ArrayList<>();
+
+    for (Item item : originalList) {
+      if (getDateDifferenceAsLong(item.expiryDate) < 1) {
+        results.add(item);
+      }
+    }
+    return results;
+  }
 }

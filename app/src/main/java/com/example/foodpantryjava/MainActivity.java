@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
@@ -41,6 +43,8 @@ import com.nambimobile.widgets.efab.FabOption;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -114,6 +118,7 @@ public class MainActivity extends AppCompatActivity  {
     View bottomNav = findViewById(R.id.coordinatorLayout);
     ExpandableFab bottomNavFab = findViewById(R.id.fab);
     FabOption fabOptionOne = findViewById(R.id.faboption_1);
+    FabOption fabOptionTwo = findViewById(R.id.faboption_2);
     FabOption fabOptionThree = findViewById(R.id.faboption_3);
     ExtendedFloatingActionButton navRailFab = findViewById(R.id.nav_fab);
 
@@ -126,12 +131,19 @@ public class MainActivity extends AppCompatActivity  {
         showAddItemDialog();
       }
     });
-//    navRailFab.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        showAddItemDialog();
-//      }
-//    });
+    //    navRailFab.setOnClickListener(new View.OnClickListener() {
+    //      @Override
+    //      public void onClick(View view) {
+    //        showAddItemDialog();
+    //      }
+    //    });
+    fabOptionTwo.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            PantryFragment.adapter.getFilter().filter("l");
+          }
+        });
     fabOptionThree.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -149,6 +161,31 @@ public class MainActivity extends AppCompatActivity  {
     for (int entry = 0; entry < backStackEntryCount; entry++) {
       fragmentManager.popBackStack();
     }
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    Log.i("SEARCH", "onCreateView: ");
+    getMenuInflater().inflate(R.menu.top_app_bar_search, menu);
+
+    MenuItem menuItem = menu.findItem(R.id.action_search);
+    final SearchView searchView = (SearchView) menuItem.getActionView();
+    searchView.setQueryHint("Type here to search");
+    searchView.setOnQueryTextListener(
+            new SearchView.OnQueryTextListener() {
+              @Override
+              public boolean onQueryTextSubmit(String query) {
+                return false;
+              }
+
+              @Override
+              public boolean onQueryTextChange(String newText) {
+                PantryFragment.adapter.getFilter().filter(newText);
+                return false;
+              }
+            });
+
+    return super.onCreateOptionsMenu(menu);
   }
 
   @Override
@@ -237,7 +274,7 @@ public class MainActivity extends AppCompatActivity  {
     sizeEditField = addNewItemDialog.findViewById(R.id.editSize);
     sizeEditField.setText("10kg");
     expiryDateEditField = addNewItemDialog.findViewById(R.id.editDate);
-    expiryDateEditField.setText("21/02/2022");
+    expiryDateEditField.setText("21022022");
 
     Spinner categorySpinner = addNewItemDialog.findViewById(R.id.spinner);
     ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
@@ -247,7 +284,7 @@ public class MainActivity extends AppCompatActivity  {
     confirmDialogActionButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        isEveryFieldChecked = checkAllFields();
+        isEveryFieldChecked = checkAllInputFields();
 
         if (isEveryFieldChecked) {
           String nameString = nameEditField.getText().toString();
@@ -311,7 +348,7 @@ public class MainActivity extends AppCompatActivity  {
     confirmDialogActionButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        isEveryFieldChecked = checkAllFields();
+        isEveryFieldChecked = checkAllInputFields();
         if (isEveryFieldChecked) {
           editItem(index, nameEditField.getText().toString(), categorySelector, Integer.parseInt(amountEditField.getText().toString()), sizeEditField.getText().toString(), expiryDateEditField.getText().toString());
           hideKeyboard(nameEditField);
@@ -841,14 +878,14 @@ public class MainActivity extends AppCompatActivity  {
    * Checks all fields.
    * @return - true if all fields are not 0, false otherwise
    */
-  public boolean checkAllFields() {
+  public boolean checkAllInputFields() {
     // nameEditField checks
     if (nameEditField.length() == 0) {
       nameEditField.setError("This field is required");
       return false;
     }
-    if (nameEditField.length() > 23) {
-      nameEditField.setError("Maximum 23 characters, currently: " + nameEditField.length());
+    if (nameEditField.length() > 28) {
+      nameEditField.setError("Maximum 28 characters, currently: " + nameEditField.length());
       return false;
     }
     // amountEditField checks
@@ -856,7 +893,7 @@ public class MainActivity extends AppCompatActivity  {
       amountEditField.setError("This field is required");
       return false;
     }
-    if (amountEditField.length() > 4) {
+    if (amountEditField.length() > 5) {
       amountEditField.setError("Number too large");
       return false;
     }
@@ -866,7 +903,7 @@ public class MainActivity extends AppCompatActivity  {
       return false;
     }
     if (sizeEditField.length() > 10) {
-      sizeEditField.setError("Give size and unit eg. 20 kg");
+      sizeEditField.setError("Too long, give size and unit eg. 20 kg");
       return false;
     }
     // expiryDateEditField checks
@@ -874,12 +911,27 @@ public class MainActivity extends AppCompatActivity  {
       expiryDateEditField.setError("This field is required");
       return false;
     }
-    else if (expiryDateEditField.length() < 8) {
-      expiryDateEditField.setError("Format not correct, should be DD/MM/YYYY");
+//    else if (expiryDateEditField.length() != 8) {
+//      expiryDateEditField.setError("Format not correct, should be DDMMYYYY");
+//      return false;
+//    }
+    else if (!isDateValid(expiryDateEditField.getText().toString())) {
+      expiryDateEditField.setError("Date not correct, should be DDMMYYYY");
       return false;
     }
     return true;
   } // checkAllFields
+
+  public boolean isDateValid(String date) {
+    try {
+      DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+      dateFormat.setLenient(false);
+      dateFormat.parse(date);
+      return true;
+    } catch (ParseException e) {
+      return false;
+    }
+  }
 
   /**
    * Sets the correct icon depending on the category that the user has chosen.
@@ -931,7 +983,7 @@ public class MainActivity extends AppCompatActivity  {
    */
   public String getDateDifferenceAsString(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
 
     try {
       Date date2;
@@ -954,7 +1006,7 @@ public class MainActivity extends AppCompatActivity  {
    */
   public long getDateDifferenceAsLong(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
 
     try {
       Date date2;

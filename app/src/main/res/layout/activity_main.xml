@@ -101,9 +101,9 @@
             <com.nambimobile.widgets.efab.Overlay
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:overlay_color="@color/black"
                 app:overlay_alpha="0.5"
-                app:overlay_openingAnimationDurationMs="1000"/>
+                app:overlay_color="@color/black"
+                app:overlay_openingAnimationDurationMs="1000" />
 
             <com.nambimobile.widgets.efab.ExpandableFab
                 android:id="@+id/fab"
@@ -111,12 +111,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="Expandable FAB"
-                app:efab_iconAnimationRotationDeg="135"
                 app:efab_closingAnticipateTension="0"
-                app:efab_size="custom"
                 app:efab_icon="@drawable/ic_outline_create_24"
+                app:efab_iconAnimationRotationDeg="135"
+                app:efab_size="custom"
                 app:fabCustomSize="65dp"
-                app:layout_anchor="@id/bottomAppBar"/>
+                app:layout_anchor="@id/bottomAppBar" />
 
             <com.nambimobile.widgets.efab.FabOption
                 android:id="@+id/faboption_1"
@@ -124,12 +124,13 @@
                 android:layout_height="wrap_content"
                 app:fab_icon="@drawable/ic_baseline_add_24"
                 app:label_text="@string/add_new_item" />
+
             <com.nambimobile.widgets.efab.FabOption
                 android:id="@+id/faboption_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:fab_orientation="portrait"
                 app:fab_icon="@drawable/exclamationmark"
+                app:fab_orientation="portrait"
                 app:label_text="Option 2" />
 
             <com.nambimobile.widgets.efab.FabOption

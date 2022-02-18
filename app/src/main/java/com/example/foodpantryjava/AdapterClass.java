@@ -174,7 +174,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
    */
   public String getDateDifferenceAsString(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
 
     try {
       Date date2;
@@ -200,7 +200,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
    */
   public long getDateDifferenceAsLong(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
 
     try {
       Date date2;
@@ -245,7 +245,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
   public void showLowInStockItems() {
     List<Item> results = new ArrayList<>();
     for (Item item : SaveFile.data) {
-      if (item.number < 5) {
+      if (item.number < 6 && item.number > 0) {
         results.add(item);
       }
     }
@@ -269,7 +269,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
   public void showExpiringSoonItems() {
     List<Item> results = new ArrayList<>();
     for (Item item : SaveFile.data) {
-      if (getDateDifferenceAsLong(item.expiryDate) < 30) {
+      if (getDateDifferenceAsLong(item.expiryDate) < 30 && getDateDifferenceAsLong(item.expiryDate) > 0) {
         results.add(item);
       }
     }

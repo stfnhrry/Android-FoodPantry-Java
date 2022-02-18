@@ -61,7 +61,7 @@ public class Item {
    */
   public String getDateDifferenceAsString(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
 
     try {
       Date date2;

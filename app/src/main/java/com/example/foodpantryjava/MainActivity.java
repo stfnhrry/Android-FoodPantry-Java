@@ -43,6 +43,8 @@ import com.nambimobile.widgets.efab.FabOption;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -178,7 +180,6 @@ public class MainActivity extends AppCompatActivity  {
 
               @Override
               public boolean onQueryTextChange(String newText) {
-                Log.i("SEARCH ", "onQueryTextChange: " + newText);
                 PantryFragment.adapter.getFilter().filter(newText);
                 return false;
               }
@@ -273,7 +274,7 @@ public class MainActivity extends AppCompatActivity  {
     sizeEditField = addNewItemDialog.findViewById(R.id.editSize);
     sizeEditField.setText("10kg");
     expiryDateEditField = addNewItemDialog.findViewById(R.id.editDate);
-    expiryDateEditField.setText("21/02/2022");
+    expiryDateEditField.setText("21022022");
 
     Spinner categorySpinner = addNewItemDialog.findViewById(R.id.spinner);
     ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
@@ -283,7 +284,7 @@ public class MainActivity extends AppCompatActivity  {
     confirmDialogActionButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        isEveryFieldChecked = checkAllFields();
+        isEveryFieldChecked = checkAllInputFields();
 
         if (isEveryFieldChecked) {
           String nameString = nameEditField.getText().toString();
@@ -347,7 +348,7 @@ public class MainActivity extends AppCompatActivity  {
     confirmDialogActionButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        isEveryFieldChecked = checkAllFields();
+        isEveryFieldChecked = checkAllInputFields();
         if (isEveryFieldChecked) {
           editItem(index, nameEditField.getText().toString(), categorySelector, Integer.parseInt(amountEditField.getText().toString()), sizeEditField.getText().toString(), expiryDateEditField.getText().toString());
           hideKeyboard(nameEditField);
@@ -877,14 +878,14 @@ public class MainActivity extends AppCompatActivity  {
    * Checks all fields.
    * @return - true if all fields are not 0, false otherwise
    */
-  public boolean checkAllFields() {
+  public boolean checkAllInputFields() {
     // nameEditField checks
     if (nameEditField.length() == 0) {
       nameEditField.setError("This field is required");
       return false;
     }
-    if (nameEditField.length() > 23) {
-      nameEditField.setError("Maximum 23 characters, currently: " + nameEditField.length());
+    if (nameEditField.length() > 28) {
+      nameEditField.setError("Maximum 28 characters, currently: " + nameEditField.length());
       return false;
     }
     // amountEditField checks
@@ -892,7 +893,7 @@ public class MainActivity extends AppCompatActivity  {
       amountEditField.setError("This field is required");
       return false;
     }
-    if (amountEditField.length() > 4) {
+    if (amountEditField.length() > 5) {
       amountEditField.setError("Number too large");
       return false;
     }
@@ -902,7 +903,7 @@ public class MainActivity extends AppCompatActivity  {
       return false;
     }
     if (sizeEditField.length() > 10) {
-      sizeEditField.setError("Give size and unit eg. 20 kg");
+      sizeEditField.setError("Too long, give size and unit eg. 20 kg");
       return false;
     }
     // expiryDateEditField checks
@@ -910,12 +911,27 @@ public class MainActivity extends AppCompatActivity  {
       expiryDateEditField.setError("This field is required");
       return false;
     }
-    else if (expiryDateEditField.length() < 8) {
-      expiryDateEditField.setError("Format not correct, should be DD/MM/YYYY");
+//    else if (expiryDateEditField.length() != 8) {
+//      expiryDateEditField.setError("Format not correct, should be DDMMYYYY");
+//      return false;
+//    }
+    else if (!isDateValid(expiryDateEditField.getText().toString())) {
+      expiryDateEditField.setError("Date not correct, should be DDMMYYYY");
       return false;
     }
     return true;
   } // checkAllFields
+
+  public boolean isDateValid(String date) {
+    try {
+      DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+      dateFormat.setLenient(false);
+      dateFormat.parse(date);
+      return true;
+    } catch (ParseException e) {
+      return false;
+    }
+  }
 
   /**
    * Sets the correct icon depending on the category that the user has chosen.
@@ -967,7 +983,7 @@ public class MainActivity extends AppCompatActivity  {
    */
   public String getDateDifferenceAsString(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
 
     try {
       Date date2;
@@ -990,7 +1006,7 @@ public class MainActivity extends AppCompatActivity  {
    */
   public long getDateDifferenceAsLong(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
 
     try {
       Date date2;

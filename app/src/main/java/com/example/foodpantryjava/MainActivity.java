@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity  {
     amountEditField.setText("2");
     sizeEditField = addNewItemDialog.findViewById(R.id.editSize);
     sizeEditField.setText("10kg");
-    expiryDateEditField = addNewItemDialog.findViewById(R.id.editDate);
+    expiryDateEditField = addNewItemDialog.findViewById(R.id.editDateMasked);
     expiryDateEditField.setText("21022022");
 
     Spinner categorySpinner = addNewItemDialog.findViewById(R.id.spinner);
@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity  {
     categorySelector.setAdapter(categoryAdapter);
     amountEditField = editItemDialog.findViewById(R.id.editAmount);
     sizeEditField = editItemDialog.findViewById(R.id.editSize);
-    expiryDateEditField = editItemDialog.findViewById(R.id.editDate);
+    expiryDateEditField = editItemDialog.findViewById(R.id.editDateMasked);
 
     // Set the text in the fields to match the data on the items
     nameEditField.setText(SaveFile.data.get(index).name);
@@ -912,11 +912,11 @@ public class MainActivity extends AppCompatActivity  {
       return false;
     }
 //    else if (expiryDateEditField.length() != 8) {
-//      expiryDateEditField.setError("Format not correct, should be DDMMYYYY");
+//      expiryDateEditField.setError("Format not correct, should be DD/MM/YYYY");
 //      return false;
 //    }
     else if (!isDateValid(expiryDateEditField.getText().toString())) {
-      expiryDateEditField.setError("Date not correct, should be DDMMYYYY");
+      expiryDateEditField.setError("Date not correct, should be DD/MM/YYYY");
       return false;
     }
     return true;
@@ -924,7 +924,7 @@ public class MainActivity extends AppCompatActivity  {
 
   public boolean isDateValid(String date) {
     try {
-      DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+      DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
       dateFormat.setLenient(false);
       dateFormat.parse(date);
       return true;
@@ -983,7 +983,7 @@ public class MainActivity extends AppCompatActivity  {
    */
   public String getDateDifferenceAsString(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     try {
       Date date2;
@@ -1006,7 +1006,7 @@ public class MainActivity extends AppCompatActivity  {
    */
   public long getDateDifferenceAsLong(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     try {
       Date date2;

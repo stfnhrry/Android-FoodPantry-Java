@@ -174,7 +174,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
    */
   public String getDateDifferenceAsString(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     try {
       Date date2;
@@ -200,7 +200,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
    */
   public long getDateDifferenceAsLong(String expiryDate) {
     Date calendar = Calendar.getInstance().getTime();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     try {
       Date date2;

@@ -74,6 +74,14 @@ public class PantryFragment extends Fragment {
                   ((MainActivity)getActivity()).showAddToShoppingListDialog(position);
                 }
               }
+
+              @Override
+              public void onLongPress(int position) {
+                if (getActivity() != null) {
+                  Log.i("PANTRY FRAGMENT", "Item was long pressed");
+                  ((MainActivity)getActivity()).showEditItemAmountDialog(position);
+                }
+              }
             }, getResources());
     pantryRecyclerView.setAdapter(adapter);
 

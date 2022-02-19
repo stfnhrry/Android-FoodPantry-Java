@@ -29,6 +29,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
     void onDelete(int position);
     void onEdit(int position);
     void onAddToList(int position);
+    void onLongPress(int position);
   }
   private final itemCardListener mListener;
   Resources mResource;
@@ -144,6 +145,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
       card.setOnLongClickListener(
               view -> {
                 Log.i("ADAPTER", "onClick: LONG PRESSED A CARD");
+                mListener.onLongPress(getAdapterPosition());
                 return true;
               });
 
@@ -321,54 +323,6 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
 
     for (Item item : originalList) {
       if (item.name.toLowerCase(Locale.getDefault()).contains(constraint)) {
-        results.add(item);
-      }
-    }
-    return results;
-  }
-
-  public List<Item> getAllItemsFilterResults() {
-    return originalList;
-  }
-
-  public List<Item> getLowInStockFilterResults() {
-    List<Item> results = new ArrayList<>();
-
-    for (Item item : originalList) {
-      if (item.number < 5) {
-        results.add(item);
-      }
-    }
-    return results;
-  }
-
-  public List<Item> getOutOfStockFilterResults() {
-    List<Item> results = new ArrayList<>();
-
-    for (Item item : originalList) {
-      if (item.number < 1) {
-        results.add(item);
-      }
-    }
-    return results;
-  }
-
-  public List<Item> getExpiringSoonFilterResults() {
-    List<Item> results = new ArrayList<>();
-
-    for (Item item : originalList) {
-      if (getDateDifferenceAsLong(item.expiryDate) < 30) {
-        results.add(item);
-      }
-    }
-    return results;
-  }
-
-  public List<Item> getExpiredFilterResults() {
-    List<Item> results = new ArrayList<>();
-
-    for (Item item : originalList) {
-      if (getDateDifferenceAsLong(item.expiryDate) < 1) {
         results.add(item);
       }
     }

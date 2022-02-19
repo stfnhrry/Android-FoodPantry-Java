@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -243,14 +244,23 @@ public class MainActivity extends AppCompatActivity  {
     refreshShoppingList();
   }
 
-  public void showToast(String text) {
+  public void showLongToast(String text) {
     if (lastToast != null) {
       lastToast.cancel();
     }
     Toast toast = Toast.makeText(this, text, Toast.LENGTH_LONG);
     toast.show();
     lastToast = toast;
-  } // showToast
+  } // showLongToast
+
+  public void showShortToast(String text) {
+    if (lastToast != null) {
+      lastToast.cancel();
+    }
+    Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+    toast.show();
+    lastToast = toast;
+  } // showShortToast
 
   public void addItem(String name, String category, int amount, String weight, String expiryDate) {
     int dataIndex = SaveFile.data.size();
@@ -350,7 +360,7 @@ public class MainActivity extends AppCompatActivity  {
       public void onClick(View view) {
         isEveryFieldChecked = checkAllInputFields();
         if (isEveryFieldChecked) {
-          editItem(index, nameEditField.getText().toString(), categorySelector, Integer.parseInt(amountEditField.getText().toString()), sizeEditField.getText().toString(), expiryDateEditField.getText().toString());
+          editItem(index, nameEditField.getText().toString(), categorySelector.getSelectedItem().toString(), Integer.parseInt(amountEditField.getText().toString()), sizeEditField.getText().toString(), expiryDateEditField.getText().toString());
           hideKeyboard(nameEditField);
           editItemDialog.dismiss();
         }
@@ -384,8 +394,8 @@ public class MainActivity extends AppCompatActivity  {
    * @param size     - size of the item
    * @param expDate  - expiry date of the item
    */
-  public void editItem(int index, String name, Spinner category, Integer amount, String size, String expDate) {
-    SaveFile.data.set(index, new Item(name, category.getSelectedItem().toString(), amount, size, expDate));
+  public void editItem(int index, String name, String category, Integer amount, String size, String expDate) {
+    SaveFile.data.set(index, new Item(name, category, amount, size, expDate));
     PantryFragment.adapter.notifyItemChanged(index);
 
     String iconString = Integer.toString(SaveFile.data.get(index).icon);
@@ -393,7 +403,7 @@ public class MainActivity extends AppCompatActivity  {
     String[] temp = new String[6];
     temp[0] = iconString;
     temp[1] = name;
-    temp[2] = category.getSelectedItem().toString();
+    temp[2] = category;
     temp[3] = amountString;
     temp[4] = size;
     temp[5] = expDate;
@@ -406,6 +416,7 @@ public class MainActivity extends AppCompatActivity  {
     MaterialAlertDialogBuilder deleteDialog = new MaterialAlertDialogBuilder(this);
     deleteDialog.setTitle(getResources().getString(R.string.remove_item_title));
     deleteDialog.setMessage(getResources().getString(R.string.remove_item_message));
+    deleteDialog.setCancelable(true);
     deleteDialog.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialogInterface, int i) {
@@ -419,7 +430,8 @@ public class MainActivity extends AppCompatActivity  {
         removeItemFromPantry(index);
       }
     });
-    deleteDialog.show();
+    AlertDialog dialog = deleteDialog.create();
+    dialog.show();
   }
 
   /**
@@ -453,6 +465,91 @@ public class MainActivity extends AppCompatActivity  {
 //      setRemoveModeInactive();
 //    }
   } // removeItemFromPantry
+
+  public void showEditItemAmountDialog(int index) {
+    MaterialAlertDialogBuilder editAmountDialog = new MaterialAlertDialogBuilder(this);
+    editAmountDialog.setTitle("Change Item Amount");
+    final View customLayout = getLayoutInflater().inflate(R.layout.edit_amount_dialog, null);
+    editAmountDialog.setView(customLayout);
+    TextView text = customLayout.findViewById(R.id.amountTextInAmountDialog);
+    text.setText(SaveFile.data.get(index).number.toString());
+    Button increaseButton = customLayout.findViewById(R.id.increaseButton);
+    if (increaseButton != null){
+      Log.i("ITEM", "Button valid");
+      increaseButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          Log.i("ITEM", "Increase button was clicked");
+          text.setText(incrementAmount(text));
+        }
+      });
+    } else {
+      Log.i("ITEM", "Button not valid");
+    }
+    Button decreaseButton = customLayout.findViewById(R.id.decreaseButton);
+    if (decreaseButton != null) {
+      decreaseButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          Log.i("ITEM", "Decrease button was clicked");
+          text.setText(decrementAmount(text));
+        }
+      });
+    }
+    editAmountDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+        editItem(index, SaveFile.data.get(index).name, SaveFile.data.get(index).category, Integer.parseInt(text.getText().toString()), SaveFile.data.get(index).size, SaveFile.data.get(index).expiryDate);
+        Log.i("ITEM", "onClick: OK pressed");
+      }
+    });
+    editAmountDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+        Log.i("ITEM", "onClick: Cancel pressed");
+      }
+    });
+    AlertDialog dialog = editAmountDialog.create();
+    dialog.show();
+  }
+
+  public boolean allowIncrement(int newAmount){
+    if (newAmount < 99999) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public boolean allowDecrement(int newAmount){
+    if (newAmount > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public String incrementAmount(TextView text) {
+    int newAmount = Integer.parseInt(text.getText().toString());
+    newAmount++;
+    if (allowIncrement(newAmount)) {
+      return String.valueOf(newAmount);
+    } else {
+      showShortToast("Cannot increase amount further");
+      return String.valueOf(newAmount - 1);
+    }
+  }
+
+  public String decrementAmount(TextView text) {
+    int newAmount = Integer.parseInt(text.getText().toString());
+    newAmount--;
+    if (allowDecrement(newAmount)) {
+      return String.valueOf(newAmount);
+    } else {
+      showShortToast("Cannot decrease amount further");
+      return String.valueOf(newAmount + 1);
+    }
+  }
 
   public void showAddToShoppingListDialog(int index){
     Dialog shoppingListDialog = new Dialog(this);

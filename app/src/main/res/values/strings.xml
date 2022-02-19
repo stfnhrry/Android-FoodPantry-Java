@@ -5,7 +5,7 @@
     <string name="pantry">Pantry</string>
     <string name="search">Search</string>
     <string name="shopping_list">Shopping List</string>
-    <string name="delete_all_items_title">Delete all items?</string>
+    <string name="delete_all_items_title">Delete All Items?</string>
     <string name="delete_all_items_message">This will remove all items from the pantry.\n\nTHIS ACTION CANNOT BE UNDONE.</string>
     <string name="cancel">Cancel</string>
     <string name="decline">Decline</string>

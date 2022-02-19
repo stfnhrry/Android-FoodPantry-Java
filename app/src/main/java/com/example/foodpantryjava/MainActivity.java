@@ -36,6 +36,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigationrail.NavigationRailView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nambimobile.widgets.efab.ExpandableFab;
@@ -459,16 +460,11 @@ public class MainActivity extends AppCompatActivity  {
     }
     SaveFile.pantry = tempMap;
     saveHashmapToPreferences();
-//    if (inRemovingMode == true) {
-//      setRemoveModeActive();
-//    } else {
-//      setRemoveModeInactive();
-//    }
   } // removeItemFromPantry
 
   public void showEditItemAmountDialog(int index) {
     MaterialAlertDialogBuilder editAmountDialog = new MaterialAlertDialogBuilder(this);
-    editAmountDialog.setTitle("Change Item Amount");
+    editAmountDialog.setTitle("Change Amount");
     final View customLayout = getLayoutInflater().inflate(R.layout.edit_amount_dialog, null);
     editAmountDialog.setView(customLayout);
     TextView text = customLayout.findViewById(R.id.amountTextInAmountDialog);
@@ -496,7 +492,7 @@ public class MainActivity extends AppCompatActivity  {
         }
       });
     }
-    editAmountDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+    editAmountDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialogInterface, int i) {
         editItem(index, SaveFile.data.get(index).name, SaveFile.data.get(index).category, Integer.parseInt(text.getText().toString()), SaveFile.data.get(index).size, SaveFile.data.get(index).expiryDate);
@@ -514,7 +510,7 @@ public class MainActivity extends AppCompatActivity  {
   }
 
   public boolean allowIncrement(int newAmount){
-    if (newAmount < 99999) {
+    if (newAmount <= 99999) {
       return true;
     } else {
       return false;
@@ -522,7 +518,7 @@ public class MainActivity extends AppCompatActivity  {
   }
 
   public boolean allowDecrement(int newAmount){
-    if (newAmount > 0) {
+    if (newAmount >= 0) {
       return true;
     } else {
       return false;
@@ -552,48 +548,51 @@ public class MainActivity extends AppCompatActivity  {
   }
 
   public void showAddToShoppingListDialog(int index){
-    Dialog shoppingListDialog = new Dialog(this);
-    shoppingListDialog.setContentView(R.layout.add_to_shopping_list_dialog);
+    MaterialAlertDialogBuilder addToShoppingListDialog = new MaterialAlertDialogBuilder(this);
+    addToShoppingListDialog.setTitle("Add to Shopping List");
+    final View customLayout = getLayoutInflater().inflate(R.layout.add_to_shopping_list_dialog, null);
+    addToShoppingListDialog.setView(customLayout);
+    TextView text = customLayout.findViewById(R.id.itemNameText);
+    text.setText(SaveFile.data.get(index).name);
+    TextInputEditText number = customLayout.findViewById(R.id.editAmountForShoppingCart);
 
-    Button cancelDialogButton = shoppingListDialog.findViewById(R.id.cancelButton);
-    Button confirmDialogButton = shoppingListDialog.findViewById(R.id.addToShoppingCartButton);
+    addToShoppingListDialog.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+        // needed on older versions of android for the override below to work
+      }
+    });
+    addToShoppingListDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+        Log.i("ITEM", "onClick: Cancel pressed");
+      }
+    });
 
-    TextView nameText = shoppingListDialog.findViewById(R.id.itemNameText);
-    EditText amountField = shoppingListDialog.findViewById(R.id.editAmountForShoppingCart);
+    AlertDialog dialog = addToShoppingListDialog.create();
+    dialog.show();
 
-    // Set the text in the fields to match the data on the items
-    nameText.setText(SaveFile.data.get(index).name);
-
-    confirmDialogButton.setOnClickListener(new View.OnClickListener() {
+    //code to prevent the wrong input from closing the dialog
+    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        if (amountField.length() == 0) {
-          amountField.setError("This field is required");
+        if (number.length() == 0) {
+          number.setError("This field is required");
+        }
+        else if (!allowIncrement(Integer.parseInt(number.getText().toString()))) {
+          number.setError("Number too large");
+        }
+        // allowDecrement will accept 0 but we want it to accept 1 as the lowest value here
+        else if (!allowDecrement(Integer.parseInt(number.getText().toString()) - 1)) {
+          number.setError("Number too small");
         }
         else{
-          addToShoppingList(index, amountField.getText().toString());
-          hideKeyboard(amountField);
-          shoppingListDialog.dismiss();
-
+          addToShoppingList(index, number.getText().toString());
+          dialog.dismiss();
         }
+        Log.i("ITEM", "onClick: Positive shopping list button was pressed");
       }
     });
-
-    cancelDialogButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        hideKeyboard(amountField);
-        shoppingListDialog.dismiss();
-      }
-    });
-
-    shoppingListDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-      @Override
-      public void onDismiss(DialogInterface dialogInterface) {
-        hideKeyboard(amountField);
-      }
-    });
-    shoppingListDialog.show();
   }
 
   /**
@@ -627,7 +626,8 @@ public class MainActivity extends AppCompatActivity  {
         deleteAllPantryItems();
       }
     });
-    deleteAllDialog.show();
+    AlertDialog dialog = deleteAllDialog.create();
+    dialog.show();
   }
 
   public void deleteAllPantryItems(){

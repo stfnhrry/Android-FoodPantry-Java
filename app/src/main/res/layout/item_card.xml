@@ -6,6 +6,7 @@
     style="?attr/materialCardViewElevatedStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginHorizontal="4dp"
     app:cardCornerRadius="16dp"
     app:contentPadding="2dp">
 

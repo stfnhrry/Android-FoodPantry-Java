@@ -53,6 +53,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -600,12 +601,12 @@ public class MainActivity extends AppCompatActivity  {
    * @param index current card index
    */
   public void addToShoppingList(int index, String amount) {
-
     Log.i("MAIN", "addToShoppingList: ");
     String name = SaveFile.data.get(index).name;
     Log.i("MAIN", "addToShoppingList: Before adding list is: " + SaveFile.list);
     SaveFile.list.add(name + "  -  " + amount);
     Log.i("MAIN", "addToShoppingList: After adding list is: " + SaveFile.list);
+    ShoppingListFragment.adapter.notifyItemInserted(SaveFile.list.size());
     saveShoppingListToPreferences();
   } // addToShoppingList
 
@@ -740,11 +741,11 @@ public class MainActivity extends AppCompatActivity  {
    * @param key the key
    * @return - the urls
    */
-  public ArrayList<String> getShoppingListFromPreferences(String key) {
+  public List<String> getShoppingListFromPreferences(String key) {
     Log.i("MAIN", "getShoppingListFromPreferences: ");
     SharedPreferences prefs = getSharedPreferences("LIST", 0);
     String json = prefs.getString(key, null);
-    ArrayList<String> stringArray = new ArrayList<String>();
+    List<String> stringArray = new ArrayList<>();
     if (json != null) {
       try {
         JSONArray array = new JSONArray(json);

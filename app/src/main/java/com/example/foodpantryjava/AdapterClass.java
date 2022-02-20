@@ -105,7 +105,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
       number.setText(list.get(getAdapterPosition()).number.toString() + " left in pantry");
       size.setText(list.get(getAdapterPosition()).size);
       expiryDate.setText(list.get(getAdapterPosition()).expiryDate);
-      //Set the displayed counter till expiry text and color based on the difference to the current day
+      //Set the text and color for 'days till expiry' based on the difference to the current day
       if (getDateDifferenceAsLong(expiryDate.getText().toString()) < daysTillExpiryWarning && getDateDifferenceAsLong(expiryDate.getText().toString()) > 0) {
         expiryText.setText("Expires in " + getDateDifferenceAsString(expiryDate.getText().toString()) + " days");
         expiryText.setTextColor(mResource.getColor(R.color.orange_warning, null));

@@ -49,6 +49,12 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     public void bind() {
       Log.i("LIST ADAPTER", "bind");
       info.setText(SaveFile.list.get(getAdapterPosition()));
+      card.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          card.setChecked(!card.isChecked());
+        }
+      });
     }
   }
 }

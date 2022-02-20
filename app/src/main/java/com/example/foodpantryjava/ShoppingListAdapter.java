@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,21 +39,24 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
-    TextView info;
+    TextView title, info;
     MaterialCardView card;
+    CheckBox checkBox;
     public ViewHolder(@NonNull View itemView) {
       super(itemView);
-      info = itemView.findViewById(R.id.itemName);
+      title = itemView.findViewById(R.id.listItemName);
+      info = itemView.findViewById(R.id.listItemExtra);
       card = itemView.findViewById(R.id.background);
+      checkBox = itemView.findViewById(R.id.listItemCheckbox);
     }
 
     public void bind() {
       Log.i("LIST ADAPTER", "bind");
-      info.setText(SaveFile.list.get(getAdapterPosition()));
+      title.setText(SaveFile.list.get(getAdapterPosition()));
       card.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          card.setChecked(!card.isChecked());
+          checkBox.setChecked(!checkBox.isChecked());
         }
       });
     }

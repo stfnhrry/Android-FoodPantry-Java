@@ -28,4 +28,14 @@
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
     </style>
+
+    <!-- Theme for fullscreen dialogs. -->
+    <style name="Theme.FullScreenDialog" parent="Theme.Material3.DayNight.Dialog">
+        <item name="colorPrimaryDark">@color/md_theme_dark_primary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="actionMenuTextColor">@color/colorAccent</item>
+    </style>
 </resources>

@@ -26,8 +26,7 @@
             android:id="@+id/listItemCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:checked="true"
+            android:paddingEnd="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -53,17 +52,12 @@
             app:layout_constraintStart_toStartOf="@+id/listItemName"
             app:layout_constraintTop_toBottomOf="@+id/listItemName" />
 
-        <Button
-            android:id="@+id/increaseButton"
-            style="@style/Widget.Material3.Button.TonalButton"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/listItemDeleteButton"
+            style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="6dp"
             app:icon="@drawable/ic_baseline_cancel_24"
-            app:iconPadding="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -37,7 +37,14 @@ public class ShoppingListFragment extends Fragment {
     shoppingListRecyclerView.setHasFixedSize(true);
     shoppingListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
 
-    adapter = new ShoppingListAdapter();
+    adapter = new ShoppingListAdapter(new ShoppingListAdapter.listCardListener() {
+      @Override
+      public void onSave() {
+        if (getActivity() != null) {
+          ((MainActivity)getActivity()).saveShoppingListToPreferences();
+        }
+      }
+    });
     shoppingListRecyclerView.setAdapter(adapter);
 
     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);

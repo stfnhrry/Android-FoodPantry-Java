@@ -602,10 +602,15 @@ public class MainActivity extends AppCompatActivity  {
    */
   public void addToShoppingList(int index, String amount) {
     Log.i("MAIN", "addToShoppingList: ");
-    String name = SaveFile.data.get(index).name;
-    Log.i("MAIN", "addToShoppingList: Before adding list is: " + SaveFile.list);
-    SaveFile.list.add(name + "  -  " + amount);
-    Log.i("MAIN", "addToShoppingList: After adding list is: " + SaveFile.list);
+    StringBuilder listItemInfo = new StringBuilder();
+    listItemInfo.append(SaveFile.data.get(index).name).append(";break;");
+    listItemInfo.append(amount).append(";break;");
+    listItemInfo.append("Unused").append(";break;");
+    listItemInfo.append("Unused").append(";break;");
+    listItemInfo.append("F");
+    Log.i("MAIN", "addToShoppingList: Before adding list is: " + SaveFile.list.size());
+    SaveFile.list.add(listItemInfo.toString());
+    Log.i("MAIN", "addToShoppingList: After adding list is: " + SaveFile.list.size());
     ShoppingListFragment.adapter.notifyItemInserted(SaveFile.list.size());
     saveShoppingListToPreferences();
   } // addToShoppingList

@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_pantry" />
     <fragment
         android:id="@+id/recipePage"
-        android:name="com.example.foodpantryjava.SearchFragment"
+        android:name="com.example.foodpantryjava.RecipeFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_recipes" />
     <fragment
         android:id="@+id/shoppingListPage"
         android:name="com.example.foodpantryjava.ShoppingListFragment"

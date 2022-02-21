@@ -23,6 +23,8 @@
     <string name="remove_item_message">This will remove this item from the pantry completely.</string>
     <string name="default_title">Title</string>
     <string name="default_text">text goes here</string>
+    <string name="coming_soon">Coming Soon</string>
+    <string name="nothing_here_yet">There\'s nothing here… yet</string>
 
     <string name="description_delete_from_list">Delete item from shopping list</string>
 

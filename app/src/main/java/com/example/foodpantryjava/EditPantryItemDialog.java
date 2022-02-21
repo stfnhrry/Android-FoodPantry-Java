@@ -86,7 +86,7 @@ public class EditPantryItemDialog extends DialogFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     toolbar.setNavigationOnClickListener(view1 -> dismiss());
-    toolbar.setTitle(R.string.add_new_item);
+    toolbar.setTitle(R.string.edit_item);
     toolbar.inflateMenu(R.menu.add_edit_item_menu);
     toolbar.setOnMenuItemClickListener(
         item -> {
@@ -100,9 +100,10 @@ public class EditPantryItemDialog extends DialogFragment {
                     Integer.parseInt(amountEditField.getText().toString()),
                     sizeEditField.getText().toString(),
                     expiryDateEditField.getText().toString());
+            dismiss();
+            return true;
           }
-          dismiss();
-          return true;
+          return false;
         });
   }
 
@@ -155,12 +156,7 @@ public class EditPantryItemDialog extends DialogFragment {
     if (expiryDateEditField.length() == 0) {
       expiryDateEditField.setError("This field is required");
       return false;
-    }
-    //    else if (expiryDateEditField.length() != 8) {
-    //      expiryDateEditField.setError("Format not correct, should be DD/MM/YYYY");
-    //      return false;
-    //    }
-    else if (!isDateValid(expiryDateEditField.getText().toString())) {
+    } else if (!isDateValid(expiryDateEditField.getText().toString())) {
       expiryDateEditField.setError("Date not correct, should be DD/MM/YYYY");
       return false;
     }

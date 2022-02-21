@@ -273,50 +273,6 @@ public class MainActivity extends AppCompatActivity  {
    * Shows the add item dialog.
    */
   public void showAddItemDialog() {
-    Log.i("SAVE", "Show add item dialog");
-//    addNewItemDialog = new Dialog(this);
-//    addNewItemDialog.setContentView(R.layout.add_item_dialog);
-//
-//    confirmDialogActionButton = addNewItemDialog.findViewById(R.id.confirmButton);
-//    closeDialogButton = addNewItemDialog.findViewById(R.id.cancelButton);
-//    nameEditField = addNewItemDialog.findViewById(R.id.editName);
-//    amountEditField = addNewItemDialog.findViewById(R.id.editAmount);
-//    amountEditField.setText("2");
-//    sizeEditField = addNewItemDialog.findViewById(R.id.editSize);
-//    sizeEditField.setText("10kg");
-//    expiryDateEditField = addNewItemDialog.findViewById(R.id.editDateMasked);
-//    expiryDateEditField.setText("21022022");
-//
-//    Spinner categorySpinner = addNewItemDialog.findViewById(R.id.spinner);
-//    ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
-//    categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//    categorySpinner.setAdapter(categoryAdapter);
-//
-//    confirmDialogActionButton.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        isEveryFieldChecked = checkAllInputFields();
-//
-//        if (isEveryFieldChecked) {
-//          String nameString = nameEditField.getText().toString();
-//          String categoryString = categorySpinner.getSelectedItem().toString();
-//          int amountInteger = Integer.parseInt(amountEditField.getText().toString());
-//          String weightString = sizeEditField.getText().toString();
-//          String expDateString = expiryDateEditField.getText().toString();
-//          addNewItemToPantry(nameString, categoryString, amountInteger, weightString, expDateString);
-//        }
-//      }
-//    });
-//
-//    closeDialogButton.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        hideKeyboard(nameEditField);
-//        addNewItemDialog.dismiss();
-//      }
-//    });
-//
-//    addNewItemDialog.show();
     AddPantryItemDialog.display(getSupportFragmentManager());
   } // showAddItemDialog
 
@@ -331,59 +287,6 @@ public class MainActivity extends AppCompatActivity  {
    * @param index current card index
    */
   public void showEditItemDialog(int index) {
-//    editItemDialog = new Dialog(this);
-//    editItemDialog.setContentView(R.layout.edit_item_dialog);
-//
-//    confirmDialogActionButton = editItemDialog.findViewById(R.id.confirmButton);
-//    closeDialogButton = editItemDialog.findViewById(R.id.cancelButton);
-//
-//    nameEditField = editItemDialog.findViewById(R.id.editName);
-//    Spinner categorySelector = editItemDialog.findViewById(R.id.spinner);
-//    ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
-//    categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//    categorySelector.setAdapter(categoryAdapter);
-//    amountEditField = editItemDialog.findViewById(R.id.editAmount);
-//    sizeEditField = editItemDialog.findViewById(R.id.editSize);
-//    expiryDateEditField = editItemDialog.findViewById(R.id.editDateMasked);
-//
-//    // Set the text in the fields to match the data on the items
-//    nameEditField.setText(SaveFile.data.get(index).name);
-//    for (int i = 0; i < (categorySelector.getCount()); i++) {
-//      if (categorySelector.getItemAtPosition(i).toString().equalsIgnoreCase(SaveFile.data.get(index).category)) {
-//        categorySelector.setSelection(i);
-//      }
-//    }
-//    amountEditField.setText(SaveFile.data.get(index).number.toString());
-//    sizeEditField.setText(SaveFile.data.get(index).size);
-//    expiryDateEditField.setText(SaveFile.data.get(index).expiryDate);
-//
-//    confirmDialogActionButton.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        isEveryFieldChecked = checkAllInputFields();
-//        if (isEveryFieldChecked) {
-//          editItem(index, nameEditField.getText().toString(), categorySelector.getSelectedItem().toString(), Integer.parseInt(amountEditField.getText().toString()), sizeEditField.getText().toString(), expiryDateEditField.getText().toString());
-//          hideKeyboard(nameEditField);
-//          editItemDialog.dismiss();
-//        }
-//      }
-//    });
-//
-//    closeDialogButton.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        hideKeyboard(nameEditField);
-//        editItemDialog.dismiss();
-//      }
-//    });
-//
-//    editItemDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//      @Override
-//      public void onDismiss(DialogInterface dialogInterface) {
-//        hideKeyboard(nameEditField);
-//      }
-//    });
-//    editItemDialog.show();
     EditPantryItemDialog.display(getSupportFragmentManager(), index);
   } // showEditItemDialog
 

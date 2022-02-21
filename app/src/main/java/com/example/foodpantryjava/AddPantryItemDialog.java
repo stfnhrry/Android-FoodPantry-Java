@@ -88,9 +88,10 @@ public class AddPantryItemDialog extends DialogFragment {
             ((MainActivity) requireActivity())
                 .addNewItemToPantry(
                     nameString, categoryString, amountInteger, weightString, expDateString);
+            dismiss();
+            return true;
           }
-          dismiss();
-          return true;
+          return false;
         });
   }
 

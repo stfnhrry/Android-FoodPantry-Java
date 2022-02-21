@@ -762,7 +762,6 @@ public class MainActivity extends AppCompatActivity  {
         e.printStackTrace();
       }
     }
-    Log.i("MAIN", "GetShoppingListFromPrefs: Retrieved array is: " + stringArray);
     return stringArray;
   } // getShoppingListFromPrefs
 
@@ -777,7 +776,6 @@ public class MainActivity extends AppCompatActivity  {
    * Gets the shopping list from preferences.
    */
   public void loadShoppingList() {
-    Log.i("MAIN", "loadShoppingList: ");
     Log.i("MAIN", "loadShoppingList: Before adding list is: " + SaveFile.list);
     SaveFile.list = getShoppingListFromPreferences("ShoppingList");
     Log.i("MAIN", "loadShoppingList: After adding list is: " + SaveFile.list);

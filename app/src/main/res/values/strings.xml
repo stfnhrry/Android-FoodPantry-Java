@@ -20,6 +20,10 @@
     <string name="add_new_item">Add New Item</string>
     <string name="remove_item_title">Remove Item?</string>
     <string name="remove_item_message">This will remove this item from the pantry completely.</string>
+    <string name="default_title">Title</string>
+    <string name="default_text">text goes here</string>
+
+    <string name="description_delete_from_list">Delete item from shopping list</string>
 
     <string-array name="categories">
         <item>CANS</item>

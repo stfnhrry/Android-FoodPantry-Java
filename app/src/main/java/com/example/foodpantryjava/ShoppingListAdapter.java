@@ -14,11 +14,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder> {
-  // Listener for implementing functions when pressing cards
-  public interface listCardListener {
-    void onSave();
-  }
-
   private final listCardListener mListener;
 
   public ShoppingListAdapter(listCardListener listener) {
@@ -43,6 +38,20 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
   @Override
   public int getItemCount() {
     return SaveFile.list.size();
+  }
+
+  public StringBuilder reconstructItemInfo(String[] oldInfo) {
+    StringBuilder listItemInfo = new StringBuilder();
+    listItemInfo.append(oldInfo[0]).append(";break;");
+    listItemInfo.append(oldInfo[1]).append(";break;");
+    listItemInfo.append("Unused").append(";break;");
+    listItemInfo.append("Unused").append(";break;");
+    return listItemInfo;
+  }
+
+  // Listener for implementing functions when pressing cards
+  public interface listCardListener {
+    void onSave();
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
@@ -113,14 +122,5 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             mListener.onSave();
           });
     }
-  }
-
-  public StringBuilder reconstructItemInfo(String[] oldInfo) {
-    StringBuilder listItemInfo = new StringBuilder();
-    listItemInfo.append(oldInfo[0]).append(";break;");
-    listItemInfo.append(oldInfo[1]).append(";break;");
-    listItemInfo.append("Unused").append(";break;");
-    listItemInfo.append("Unused").append(";break;");
-    return listItemInfo;
   }
 }

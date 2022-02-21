@@ -20,20 +20,22 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class AddPantryItemDialog extends DialogFragment {
-  public static final String TAG = "add_item_dialog";
+public class EditPantryItemDialog extends DialogFragment {
+  public static final String TAG = "edit_item_dialog";
+  static int itemIndex;
   EditText nameEditField;
   EditText amountEditField;
   EditText sizeEditField;
   EditText expiryDateEditField;
-  Spinner categorySpinner;
+  Spinner categorySelector;
   boolean isEveryFieldChecked = false;
   private Toolbar toolbar;
 
-  public static AddPantryItemDialog display(FragmentManager fragmentManager) {
-    AddPantryItemDialog addDialog = new AddPantryItemDialog();
-    addDialog.show(fragmentManager, TAG);
-    return addDialog;
+  public static EditPantryItemDialog display(FragmentManager fragmentManager, int index) {
+    EditPantryItemDialog editDialog = new EditPantryItemDialog();
+    editDialog.show(fragmentManager, TAG);
+    itemIndex = index;
+    return editDialog;
   }
 
   @Override
@@ -54,18 +56,28 @@ public class AddPantryItemDialog extends DialogFragment {
     toolbar = view.findViewById(R.id.toolbar);
     nameEditField = view.findViewById(R.id.editName);
     amountEditField = view.findViewById(R.id.editAmount);
-    amountEditField.setText("2");
     sizeEditField = view.findViewById(R.id.editSize);
-    sizeEditField.setText("10kg");
     expiryDateEditField = view.findViewById(R.id.editDateMasked);
-    expiryDateEditField.setText("21/02/2022");
-
-    categorySpinner = view.findViewById(R.id.spinner);
+    categorySelector = view.findViewById(R.id.spinner);
     ArrayAdapter<CharSequence> categoryAdapter =
         ArrayAdapter.createFromResource(
             getContext(), R.array.categories, android.R.layout.simple_spinner_item);
     categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    categorySpinner.setAdapter(categoryAdapter);
+    categorySelector.setAdapter(categoryAdapter);
+
+    // Set the text in the fields to match the data on the items
+    nameEditField.setText(SaveFile.data.get(itemIndex).name);
+    amountEditField.setText(SaveFile.data.get(itemIndex).number.toString());
+    sizeEditField.setText(SaveFile.data.get(itemIndex).size);
+    expiryDateEditField.setText(SaveFile.data.get(itemIndex).expiryDate);
+    for (int i = 0; i < (categorySelector.getCount()); i++) {
+      if (categorySelector
+          .getItemAtPosition(i)
+          .toString()
+          .equalsIgnoreCase(SaveFile.data.get(itemIndex).category)) {
+        categorySelector.setSelection(i);
+      }
+    }
 
     return view;
   }
@@ -80,14 +92,14 @@ public class AddPantryItemDialog extends DialogFragment {
         item -> {
           isEveryFieldChecked = checkAllInputFields();
           if (isEveryFieldChecked) {
-            String nameString = nameEditField.getText().toString();
-            String categoryString = categorySpinner.getSelectedItem().toString();
-            int amountInteger = Integer.parseInt(amountEditField.getText().toString());
-            String weightString = sizeEditField.getText().toString();
-            String expDateString = expiryDateEditField.getText().toString();
             ((MainActivity) requireActivity())
-                .addNewItemToPantry(
-                    nameString, categoryString, amountInteger, weightString, expDateString);
+                .editItem(
+                    itemIndex,
+                    nameEditField.getText().toString(),
+                    categorySelector.getSelectedItem().toString(),
+                    Integer.parseInt(amountEditField.getText().toString()),
+                    sizeEditField.getText().toString(),
+                    expiryDateEditField.getText().toString());
           }
           dismiss();
           return true;

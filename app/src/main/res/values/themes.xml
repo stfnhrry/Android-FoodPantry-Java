@@ -38,4 +38,9 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="actionMenuTextColor">@color/colorAccent</item>
     </style>
+
+    <style name="Theme.Slide" parent="Theme.FoodPantryJava">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
 </resources>

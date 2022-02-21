@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -332,59 +331,60 @@ public class MainActivity extends AppCompatActivity  {
    * @param index current card index
    */
   public void showEditItemDialog(int index) {
-    editItemDialog = new Dialog(this);
-    editItemDialog.setContentView(R.layout.edit_item_dialog);
-
-    confirmDialogActionButton = editItemDialog.findViewById(R.id.confirmButton);
-    closeDialogButton = editItemDialog.findViewById(R.id.cancelButton);
-
-    nameEditField = editItemDialog.findViewById(R.id.editName);
-    Spinner categorySelector = editItemDialog.findViewById(R.id.spinner);
-    ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
-    categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    categorySelector.setAdapter(categoryAdapter);
-    amountEditField = editItemDialog.findViewById(R.id.editAmount);
-    sizeEditField = editItemDialog.findViewById(R.id.editSize);
-    expiryDateEditField = editItemDialog.findViewById(R.id.editDateMasked);
-
-    // Set the text in the fields to match the data on the items
-    nameEditField.setText(SaveFile.data.get(index).name);
-    for (int i = 0; i < (categorySelector.getCount()); i++) {
-      if (categorySelector.getItemAtPosition(i).toString().equalsIgnoreCase(SaveFile.data.get(index).category)) {
-        categorySelector.setSelection(i);
-      }
-    }
-    amountEditField.setText(SaveFile.data.get(index).number.toString());
-    sizeEditField.setText(SaveFile.data.get(index).size);
-    expiryDateEditField.setText(SaveFile.data.get(index).expiryDate);
-
-    confirmDialogActionButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        isEveryFieldChecked = checkAllInputFields();
-        if (isEveryFieldChecked) {
-          editItem(index, nameEditField.getText().toString(), categorySelector.getSelectedItem().toString(), Integer.parseInt(amountEditField.getText().toString()), sizeEditField.getText().toString(), expiryDateEditField.getText().toString());
-          hideKeyboard(nameEditField);
-          editItemDialog.dismiss();
-        }
-      }
-    });
-
-    closeDialogButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        hideKeyboard(nameEditField);
-        editItemDialog.dismiss();
-      }
-    });
-
-    editItemDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-      @Override
-      public void onDismiss(DialogInterface dialogInterface) {
-        hideKeyboard(nameEditField);
-      }
-    });
-    editItemDialog.show();
+//    editItemDialog = new Dialog(this);
+//    editItemDialog.setContentView(R.layout.edit_item_dialog);
+//
+//    confirmDialogActionButton = editItemDialog.findViewById(R.id.confirmButton);
+//    closeDialogButton = editItemDialog.findViewById(R.id.cancelButton);
+//
+//    nameEditField = editItemDialog.findViewById(R.id.editName);
+//    Spinner categorySelector = editItemDialog.findViewById(R.id.spinner);
+//    ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this, R.array.categories, android.R.layout.simple_spinner_item);
+//    categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//    categorySelector.setAdapter(categoryAdapter);
+//    amountEditField = editItemDialog.findViewById(R.id.editAmount);
+//    sizeEditField = editItemDialog.findViewById(R.id.editSize);
+//    expiryDateEditField = editItemDialog.findViewById(R.id.editDateMasked);
+//
+//    // Set the text in the fields to match the data on the items
+//    nameEditField.setText(SaveFile.data.get(index).name);
+//    for (int i = 0; i < (categorySelector.getCount()); i++) {
+//      if (categorySelector.getItemAtPosition(i).toString().equalsIgnoreCase(SaveFile.data.get(index).category)) {
+//        categorySelector.setSelection(i);
+//      }
+//    }
+//    amountEditField.setText(SaveFile.data.get(index).number.toString());
+//    sizeEditField.setText(SaveFile.data.get(index).size);
+//    expiryDateEditField.setText(SaveFile.data.get(index).expiryDate);
+//
+//    confirmDialogActionButton.setOnClickListener(new View.OnClickListener() {
+//      @Override
+//      public void onClick(View view) {
+//        isEveryFieldChecked = checkAllInputFields();
+//        if (isEveryFieldChecked) {
+//          editItem(index, nameEditField.getText().toString(), categorySelector.getSelectedItem().toString(), Integer.parseInt(amountEditField.getText().toString()), sizeEditField.getText().toString(), expiryDateEditField.getText().toString());
+//          hideKeyboard(nameEditField);
+//          editItemDialog.dismiss();
+//        }
+//      }
+//    });
+//
+//    closeDialogButton.setOnClickListener(new View.OnClickListener() {
+//      @Override
+//      public void onClick(View view) {
+//        hideKeyboard(nameEditField);
+//        editItemDialog.dismiss();
+//      }
+//    });
+//
+//    editItemDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//      @Override
+//      public void onDismiss(DialogInterface dialogInterface) {
+//        hideKeyboard(nameEditField);
+//      }
+//    });
+//    editItemDialog.show();
+    EditPantryItemDialog.display(getSupportFragmentManager(), index);
   } // showEditItemDialog
 
   /**

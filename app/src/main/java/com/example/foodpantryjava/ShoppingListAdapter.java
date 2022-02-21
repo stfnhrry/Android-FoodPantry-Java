@@ -40,13 +40,15 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     return SaveFile.list.size();
   }
 
-  public StringBuilder reconstructItemInfo(String[] oldInfo) {
-    StringBuilder listItemInfo = new StringBuilder();
-    listItemInfo.append(oldInfo[0]).append(";break;");
-    listItemInfo.append(oldInfo[1]).append(";break;");
-    listItemInfo.append("Unused").append(";break;");
-    listItemInfo.append("Unused").append(";break;");
-    return listItemInfo;
+  public String reconstructItemInfo(String[] oldInfo) {
+    return oldInfo[0]
+        + ";break;"
+        + oldInfo[1]
+        + ";break;"
+        + "Unused"
+        + ";break;"
+        + "Unused"
+        + ";break;";
   }
 
   // Listener for implementing functions when pressing cards
@@ -96,12 +98,10 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             card.setChecked(!card.isChecked());
             checkBox.setChecked(card.isChecked());
             if (card.isChecked()) {
-              SaveFile.list.set(
-                  getAdapterPosition(), reconstructItemInfo(allItemInfo).append("T").toString());
+              SaveFile.list.set(getAdapterPosition(), reconstructItemInfo(allItemInfo) + "T");
               notifyItemChanged(getAdapterPosition());
             } else if (!card.isChecked()) {
-              SaveFile.list.set(
-                  getAdapterPosition(), reconstructItemInfo(allItemInfo).append("F").toString());
+              SaveFile.list.set(getAdapterPosition(), reconstructItemInfo(allItemInfo) + "F");
               notifyItemChanged(getAdapterPosition());
             }
             mListener.onSave();
@@ -111,12 +111,10 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             card.setChecked(!card.isChecked());
             checkBox.setChecked(card.isChecked());
             if (card.isChecked()) {
-              SaveFile.list.set(
-                  getAdapterPosition(), reconstructItemInfo(allItemInfo).append("T").toString());
+              SaveFile.list.set(getAdapterPosition(), reconstructItemInfo(allItemInfo) + "T");
               notifyItemChanged(getAdapterPosition());
             } else if (!card.isChecked()) {
-              SaveFile.list.set(
-                  getAdapterPosition(), reconstructItemInfo(allItemInfo).append("F").toString());
+              SaveFile.list.set(getAdapterPosition(), reconstructItemInfo(allItemInfo) + "F");
               notifyItemChanged(getAdapterPosition());
             }
             mListener.onSave();

@@ -625,12 +625,12 @@ public class MainActivity extends AppCompatActivity {
                 setSelectedMenuItem(item);
                 return true;
               }
-            case "Search":
-              if (R.id.searchPage
+            case "Recipes":
+              if (R.id.recipePage
                   == Objects.requireNonNull(navController.getCurrentDestination()).getId()) {
                 return false;
               } else {
-                navController.navigate(R.id.searchPage);
+                navController.navigate(R.id.recipePage);
                 setSelectedMenuItem(item);
                 return true;
               }
@@ -670,12 +670,12 @@ public class MainActivity extends AppCompatActivity {
                 setSelectedMenuItem(item);
                 return true;
               }
-            case "Search":
-              if (R.id.searchPage
+            case "Recipes":
+              if (R.id.recipePage
                   == Objects.requireNonNull(navController.getCurrentDestination()).getId()) {
                 return false;
               } else {
-                navController.navigate(R.id.searchPage);
+                navController.navigate(R.id.recipePage);
                 setSelectedMenuItem(item);
                 return true;
               }
@@ -713,10 +713,10 @@ public class MainActivity extends AppCompatActivity {
                 setSelectedMenuItem(item);
               }
               break;
-            case "Search":
-              if (R.id.searchPage
+            case "Recipes":
+              if (R.id.recipePage
                   != Objects.requireNonNull(navController.getCurrentDestination()).getId()) {
-                navController.navigate(R.id.searchPage);
+                navController.navigate(R.id.recipePage);
                 setSelectedMenuItem(item);
               }
               break;
@@ -754,12 +754,12 @@ public class MainActivity extends AppCompatActivity {
                 setSelectedMenuItem(item);
                 return true;
               }
-            case "Search":
-              if (R.id.searchPage
+            case "Recipes":
+              if (R.id.recipePage
                   == Objects.requireNonNull(navController.getCurrentDestination()).getId()) {
                 return false;
               } else {
-                navController.navigate(R.id.searchPage);
+                navController.navigate(R.id.recipePage);
                 setSelectedMenuItem(item);
                 return true;
               }

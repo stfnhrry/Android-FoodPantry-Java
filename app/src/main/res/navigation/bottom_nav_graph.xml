@@ -11,7 +11,7 @@
         android:label="fragment_pantry"
         tools:layout="@layout/fragment_pantry" />
     <fragment
-        android:id="@+id/searchPage"
+        android:id="@+id/recipePage"
         android:name="com.example.foodpantryjava.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />

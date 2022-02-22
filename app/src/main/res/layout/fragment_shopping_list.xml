@@ -14,7 +14,7 @@
             android:id="@+id/toolBar_ShoppingList"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/top_app_bar_search"
+            app:menu="@menu/menu_shopping_list"
             app:navigationIcon="@drawable/ic_baseline_checklist_24"
             app:title="@string/shopping_list" />
 

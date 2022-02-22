@@ -23,6 +23,7 @@
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/edit_amount_dialog.xml" value="0.8" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/edit_item_dialog.xml" value="0.22103463018383926" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/fragment_pantry.xml" value="0.1" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/fragment_recipes.xml" value="0.1" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/fragment_search.xml" value="0.37056737588652483" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/fragment_settings.xml" value="0.43072916666666666" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/fragment_shopping_list.xml" value="0.23157894736842105" />
@@ -30,6 +31,8 @@
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/navigation_drawer_header.xml" value="0.22280701754385965" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/layout/shopping_list_item.xml" value="0.4198331788693234" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/menu/add_edit_item_menu.xml" value="0.45799915576192485" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/menu/appBarMenu_Pantry.xml" value="0.5771697306541257" />
+        <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/menu/appBarMenu_shoppingList.xml" value="0.5771697306541257" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.4947916666666667" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/menu/navigation_drawer_header.xml" value="0.22280701754385965" />
         <entry key="..\:/Users/stefa/AndroidStudioProjects/FoodPantryJava/app/src/main/res/menu/navigation_drawer_menu.xml" value="0.22280701754385965" />

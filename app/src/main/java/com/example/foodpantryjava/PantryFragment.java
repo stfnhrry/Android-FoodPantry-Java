@@ -4,14 +4,18 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
 
 /** A simple {@link Fragment} subclass. */
@@ -19,6 +23,7 @@ public class PantryFragment extends Fragment {
 
   public static RecyclerView pantryRecyclerView;
   public static AdapterClass adapter;
+  public MaterialToolbar topAppBar;
   int minCardWidth = 293;
   Integer columns = 1;
 
@@ -28,16 +33,50 @@ public class PantryFragment extends Fragment {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
+    Log.i("PANTRY FRAGMENT", "onCreate: ");
     super.onCreate(savedInstanceState);
   }
 
   @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    Log.i("PANTRY FRAGMENT", "onCreateView: ");
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_pantry, container, false);
 
-    pantryRecyclerView = view.findViewById(R.id.recyclerView);
+    MaterialToolbar myToolbar = (MaterialToolbar) view.findViewById(R.id.toolBar_Pantry);
+    myToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+      @Override
+      public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getTitle().toString()){
+          case "Search":
+            //do stuff here
+          case "Filter":
+            //do stuff
+          case "More":
+            //do stuff
+        }
+        return true;
+      }
+    });
+
+    SearchView searchView = view.findViewById(R.id.action_search);
+    searchView.setQueryHint("Type here to search");
+    searchView.setOnQueryTextListener(
+            new SearchView.OnQueryTextListener() {
+              @Override
+              public boolean onQueryTextSubmit(String query) {
+                return false;
+              }
+
+              @Override
+              public boolean onQueryTextChange(String newText) {
+                PantryFragment.adapter.getFilter().filter(newText);
+                return false;
+              }
+            });
+
+    pantryRecyclerView = view.findViewById(R.id.recyclerView_Pantry);
     pantryRecyclerView.setHasFixedSize(true);
     setNumberOfColumnsBasedOnScreenWidth();
     pantryRecyclerView.setLayoutManager(

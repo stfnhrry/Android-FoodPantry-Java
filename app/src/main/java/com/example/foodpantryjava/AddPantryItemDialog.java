@@ -49,7 +49,7 @@ public class AddPantryItemDialog extends DialogFragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
-    View view = inflater.inflate(R.layout.add_item_dialog, container, false);
+    View view = inflater.inflate(R.layout.add_edit_item_dialog, container, false);
 
     toolbar = view.findViewById(R.id.toolbar);
     nameEditField = view.findViewById(R.id.editName);

@@ -16,7 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
@@ -47,7 +46,6 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-  public static PantryFragment itemViews;
   @Nullable private final Handler handler = new Handler();
   Toast lastToast;
   BottomNavigationView navigationBar;
@@ -58,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
   MenuItem item;
   private Boolean backPressedOnce = false;
   final Runnable runnable = this::setBackPressedToFalse;
+  Menu actionbarMenu;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     Log.i("SAVE", "onCreate: ");
-    itemViews = new PantryFragment();
     setupViews();
   }
 
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     fabOptionOne.setOnClickListener(view -> showAddItemDialog());
     navRailFab.setOnClickListener(view -> showAddItemDialog());
-    fabOptionTwo.setOnClickListener(view -> PantryFragment.adapter.getFilter().filter("l"));
+    fabOptionTwo.setOnClickListener(view -> showShortToast("Doesn't do anything right now"));
     fabOptionThree.setOnClickListener(view -> showDeleteAllItemsDialog());
 
     // Update navigation views according to screen width size.
@@ -119,29 +117,8 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    Log.i("SEARCH", "onCreateView: ");
-    getMenuInflater().inflate(R.menu.top_app_bar_search, menu);
-
-    MenuItem menuItem = menu.findItem(R.id.action_search);
-    final SearchView searchView = (SearchView) menuItem.getActionView();
-    searchView.setQueryHint("Type here to search");
-    searchView.setOnQueryTextListener(
-        new SearchView.OnQueryTextListener() {
-          @Override
-          public boolean onQueryTextSubmit(String query) {
-            return false;
-          }
-
-          @Override
-          public boolean onQueryTextChange(String newText) {
-            PantryFragment.adapter.getFilter().filter(newText);
-            return false;
-          }
-        });
-
-    return super.onCreateOptionsMenu(menu);
+  public void setActionBarTitle(String title){
+//    getSupportActionBar().setTitle(title);
   }
 
   @Override

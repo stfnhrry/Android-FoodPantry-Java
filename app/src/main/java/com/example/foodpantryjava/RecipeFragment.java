@@ -1,14 +1,13 @@
 package com.example.foodpantryjava;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,5 +34,11 @@ public class RecipeFragment extends Fragment {
   @Override
   public void onCreateOptionsMenu(Menu search, MenuInflater inflater){
     inflater.inflate(R.menu.search, search);
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    ((MainActivity)requireActivity()).setActionBarTitle("Recipes");
   }
 }

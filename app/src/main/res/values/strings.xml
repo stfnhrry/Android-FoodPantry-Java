@@ -3,6 +3,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pantry">Pantry</string>
+    <string name="food_pantry">Food Pantry</string>
+    <string name="recipes">Recipes</string>
     <string name="search">Search</string>
     <string name="shopping_list">Shopping List</string>
     <string name="delete_all_items_title">Delete All Items?</string>
@@ -16,6 +18,11 @@
     <string name="save">Save</string>
     <string name="edit">Edit</string>
     <string name="filter">Filter</string>
+    <string name="all">All</string>
+    <string name="low_in_stock">Low In Stock</string>
+    <string name="out_of_stock">Out Of Stock</string>
+    <string name="expiring_soon">Expiring Soon</string>
+    <string name="expired">Expired</string>
     <string name="add_to_shopping_list">Add To List</string>
     <string name="add_new_item">Add New Item</string>
     <string name="edit_item">Edit Item</string>

@@ -75,10 +75,4 @@ public class ShoppingListFragment extends Fragment {
     super.onStart();
     //    adapter.notifyDataSetChanged();
   }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    ((MainActivity)requireActivity()).setActionBarTitle("Shopping List");
-  }
 }

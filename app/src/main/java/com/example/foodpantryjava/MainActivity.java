@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -56,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
   MenuItem item;
   private Boolean backPressedOnce = false;
   final Runnable runnable = this::setBackPressedToFalse;
-  Menu actionbarMenu;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public void onBackPressed() {
-    NavController navController = Navigation.findNavController(this, R.id.fragNavHost);
+//    NavController navController = Navigation.findNavController(this, R.id.fragNavHost);
 
     // Check if current destination is the start point
     if (navController.getGraph().getStartDestination()
@@ -139,13 +137,30 @@ public class MainActivity extends AppCompatActivity {
       if (handler != null) {
         handler.postDelayed(runnable, 2000);
       }
-    } else {
-      super.onBackPressed();
-      if (navigationBar.getMenu().getItem(0) != null) {
-        item = navigationBar.getMenu().getItem(0);
-        setSelectedMenuItem(item);
-      }
     }
+    else {
+      super.onBackPressed();
+      setMenuItemHighlightOnBackPressed();
+    }
+  }
+
+  public void setMenuItemHighlightOnBackPressed() {
+    String currentItemLabel = Objects.requireNonNull(navController.getCurrentDestination()).getLabel().toString();
+    switch (currentItemLabel) {
+      case "fragment_pantry":
+        item = navigationBar.getMenu().getItem(0);
+        break;
+      case "fragment_recipes":
+        item = navigationBar.getMenu().getItem(1);
+        break;
+      case "fragment_shopping_list":
+        item = navigationBar.getMenu().getItem(3);
+        break;
+      case "fragment_settings":
+        item = navigationBar.getMenu().getItem(4);
+        break;
+    }
+    setSelectedMenuItem(item);
   }
 
   public void showAdd(View view) {
@@ -765,8 +780,8 @@ public class MainActivity extends AppCompatActivity {
 
   public void setSelectedMenuItem(MenuItem item) {
     navigationBar.getMenu().findItem(item.getItemId()).setChecked(true);
-    navRail.getMenu().findItem(item.getItemId()).setChecked(true);
-    modalNavDrawer.setCheckedItem(item);
-    navDrawer.setCheckedItem(item);
+//    navRail.getMenu().findItem(item.getItemId()).setChecked(true);
+//    modalNavDrawer.setCheckedItem(item);
+//    navDrawer.setCheckedItem(item);
   }
 }

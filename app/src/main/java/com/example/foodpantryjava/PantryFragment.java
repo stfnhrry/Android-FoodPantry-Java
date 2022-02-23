@@ -53,8 +53,6 @@ public class PantryFragment extends Fragment {
             //do stuff here
           case "Filter":
             //do stuff
-          case "More":
-            //do stuff
         }
         return true;
       }

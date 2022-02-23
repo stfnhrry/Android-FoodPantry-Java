@@ -13,7 +13,7 @@
     <fragment
         android:id="@+id/recipePage"
         android:name="com.example.foodpantryjava.RecipeFragment"
-        android:label="fragment_search"
+        android:label="fragment_recipes"
         tools:layout="@layout/fragment_recipes" />
     <fragment
         android:id="@+id/shoppingListPage"

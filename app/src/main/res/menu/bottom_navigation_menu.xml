@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/pantryPage"
+    <item
+        android:id="@+id/pantryPage"
         android:enabled="true"
-        android:title="Pantry"
-        android:icon="@drawable/ic_baseline_home_24"/>
+        android:icon="@drawable/ic_baseline_food_bank_24"
+        android:title="Pantry" />
 
-    <item android:id="@+id/searchPage"
+    <item
+        android:id="@+id/recipePage"
         android:enabled="true"
-        android:title="Search"
-        android:icon="@drawable/ic_baseline_search_24"/>
+        android:icon="@drawable/ic_baseline_menu_book_24"
+        android:title="Recipes" />
 
     <item
         android:id="@+id/placeholder"
         android:enabled="false"
         android:title="" />
 
-    <item android:id="@+id/shoppingListPage"
+    <item
+        android:id="@+id/shoppingListPage"
         android:enabled="true"
-        android:title="List"
-        android:icon="@drawable/ic_baseline_notifications_24"/>
+        android:icon="@drawable/ic_baseline_checklist_24"
+        android:title="List" />
 
-    <item android:id="@+id/settingsPage"
+    <item
+        android:id="@+id/settingsPage"
         android:enabled="true"
-        android:title="Settings"
-        android:icon="@drawable/ic_baseline_person_24"/>
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="Settings" />
 </menu>

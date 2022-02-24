@@ -23,19 +23,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> implements Filterable {
-  //Listener for implementing functions on clicking item cards
-  public interface itemCardListener {
-    void onDelete(int position);
-    void onEdit(int position);
-    void onAddToList(int position);
-  }
+public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder>
+    implements Filterable {
+  static int daysTillExpiryWarning = 30;
   private final itemCardListener mListener;
   Resources mResource;
   List<Item> list;
   List<Item> originalList;
-
-  static int daysTillExpiryWarning = 30;
 
   public AdapterClass(itemCardListener listener, Resources resources) {
     mListener = listener;
@@ -49,20 +43,13 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
     Log.i("ADAPTER", "onCreateViewHolder: ");
-//    data = sortByAge(data);
+    //    data = sortByAge(data);
     return new ViewHolder(v);
   }
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     Log.i("ADAPTER", "onBindViewHolder: ");
-    /*
-    if (data.get(position).age > 30) {
-      holder.name.setBackgroundColor(Color.BLUE);
-    }
-    else {
-      holder.name.setBackgroundColor(Color.YELLOW);
-    } */
     holder.bind();
   }
 
@@ -71,104 +58,9 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
     return list.size();
   }
 
-  public class ViewHolder extends RecyclerView.ViewHolder {
-    ImageView icon;
-    TextView name, category, number, size, expiryDate, expiryText;
-    CardView card;
-    MaterialButton removeB, editB, addToListB;
-    public ViewHolder (@NonNull View itemView) {
-      super(itemView);
-      Log.i("ADAPTER", "ViewHolder: the class itself");
-      card = itemView.findViewById(R.id.cardView);
-      icon = itemView.findViewById(R.id.itemIcon);
-      name = itemView.findViewById(R.id.titleText);
-      category = itemView.findViewById(R.id.categoryText);
-      number = itemView.findViewById(R.id.amountText);
-      size = itemView.findViewById(R.id.sizeText);
-      expiryDate = itemView.findViewById(R.id.expiryDateText);
-      expiryText = itemView.findViewById(R.id.expiryText);
-      removeB = itemView.findViewById(R.id.removeButton);
-      editB = itemView.findViewById(R.id.editButton);
-      addToListB = itemView.findViewById(R.id.toShoppingListButton);
-    }
-
-    public void bind() {
-      if (removeB.getVisibility() == View.VISIBLE){
-        removeB.setVisibility(View.GONE);
-        editB.setVisibility(View.GONE);
-        addToListB.setVisibility(View.GONE);
-      }
-      icon.setImageResource(list.get(getAdapterPosition()).icon);
-      name.setText(list.get(getAdapterPosition()).name);
-      category.setText(list.get(getAdapterPosition()).category);
-      number.setText(list.get(getAdapterPosition()).number.toString() + " left in pantry");
-      size.setText(list.get(getAdapterPosition()).size);
-      expiryDate.setText(list.get(getAdapterPosition()).expiryDate);
-      //Set the displayed counter till expiry text and color based on the difference to the current day
-      if (getDateDifferenceAsLong(expiryDate.getText().toString()) < daysTillExpiryWarning && getDateDifferenceAsLong(expiryDate.getText().toString()) > 0) {
-        expiryText.setText("Expires in " + getDateDifferenceAsString(expiryDate.getText().toString()) + " days");
-        expiryText.setTextColor(mResource.getColor(R.color.orange_warning, null));
-      } else if (getDateDifferenceAsLong(expiryDate.getText().toString()) < 1) {
-        expiryText.setText("Expired " + Math.abs(getDateDifferenceAsLong(expiryDate.getText().toString())) + " days ago");
-        expiryText.setTextColor(mResource.getColor(R.color.red_alert, null));
-      } else {
-        expiryText.setText("Expires in " + getDateDifferenceAsString(expiryDate.getText().toString()) + " days");
-        expiryText.setTextColor(mResource.getColor(R.color.blue_item, null));
-      }
-
-      if (Integer.parseInt(list.get(getAdapterPosition()).number.toString()) > 0 && Integer.parseInt(list.get(getAdapterPosition()).number.toString()) < 6) {
-        number.setTextColor(mResource.getColor(R.color.orange_warning, null));
-        expiryText.setVisibility(View.VISIBLE);
-      } else if (Integer.parseInt(list.get(getAdapterPosition()).number.toString()) < 1) {
-        number.setTextColor(mResource.getColor(R.color.red_alert, null));
-        expiryText.setVisibility(View.INVISIBLE);
-      } else {
-        number.setTextColor(mResource.getColor(R.color.blue_item, null));
-        expiryText.setVisibility(View.VISIBLE);
-      }
-
-      card.setOnClickListener(
-              view -> {
-                Log.i("ADAPTER", "onClick: TAPPED A CARD");
-                if (removeB.getVisibility() == View.VISIBLE){
-                  removeB.setVisibility(View.GONE);
-                  editB.setVisibility(View.GONE);
-                  addToListB.setVisibility(View.GONE);
-                } else{
-                  removeB.setVisibility(View.VISIBLE);
-                  editB.setVisibility(View.VISIBLE);
-                  addToListB.setVisibility(View.VISIBLE);
-                }
-              });
-
-      card.setOnLongClickListener(
-              view -> {
-                Log.i("ADAPTER", "onClick: LONG PRESSED A CARD");
-                return true;
-              });
-
-      removeB.setOnClickListener(
-              view -> {
-                Log.i("ADAPTER", "onClick: REMOVE BUTTON");
-                mListener.onDelete(getAdapterPosition());
-              });
-
-      editB.setOnClickListener(
-              view -> {
-                Log.i("ADAPTER", "onClick: EDIT BUTTON");
-                mListener.onEdit(getAdapterPosition());
-              });
-
-      addToListB.setOnClickListener(
-              view -> {
-                Log.i("ADAPTER", "onClick: ADD TO SHOPPING LIST BUTTON");
-                mListener.onAddToList(getAdapterPosition());
-              });
-      }
-  }
-
   /**
    * Calculates the amount of days.
+   *
    * @param expiryDate the expiry date
    * @return - the amount of days left as a string
    */
@@ -195,6 +87,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
 
   /**
    * Calculates the date difference as a long.
+   *
    * @param expiryDate the expiry date
    * @return - amount of days left as a long value
    */
@@ -218,23 +111,9 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
     }
   } // getDateDifferenceAsLong
 
-//  public ArrayList<Item> sortByAge(ArrayList<Item> data) {
-//    Collections.sort(data, new Comparator<Item>() {
-//      @Override
-//      public int compare(Item o1, Item o2) {
-//        if(o1.category >o2.category)
-//          return 1;
-//        else if(o1.category <o2.category)
-//          return -1;
-//        else return 0;
-//      }
-//    });
-//    return data;
-//  }
-
   public void showAllItems() {
-    if (originalList.size() == SaveFile.data.size())  {
-      //null condition
+    if (originalList.size() == SaveFile.data.size()) {
+      // null condition
     } else {
       originalList = SaveFile.data;
       list = originalList;
@@ -254,6 +133,20 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
     notifyDataSetChanged();
   }
 
+  //  public ArrayList<Item> sortByAge(ArrayList<Item> data) {
+  //    Collections.sort(data, new Comparator<Item>() {
+  //      @Override
+  //      public int compare(Item o1, Item o2) {
+  //        if(o1.category >o2.category)
+  //          return 1;
+  //        else if(o1.category <o2.category)
+  //          return -1;
+  //        else return 0;
+  //      }
+  //    });
+  //    return data;
+  //  }
+
   public void showOutOfStockItems() {
     List<Item> results = new ArrayList<>();
     for (Item item : SaveFile.data) {
@@ -269,7 +162,8 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
   public void showExpiringSoonItems() {
     List<Item> results = new ArrayList<>();
     for (Item item : SaveFile.data) {
-      if (getDateDifferenceAsLong(item.expiryDate) < 30 && getDateDifferenceAsLong(item.expiryDate) > 0) {
+      if (getDateDifferenceAsLong(item.expiryDate) < 30
+          && getDateDifferenceAsLong(item.expiryDate) > 0) {
         results.add(item);
       }
     }
@@ -289,7 +183,6 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
     list = originalList;
     notifyDataSetChanged();
   }
-
 
   @Override
   public Filter getFilter() {
@@ -327,51 +220,119 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder> 
     return results;
   }
 
-  public List<Item> getAllItemsFilterResults() {
-    return originalList;
+  // Listener for implementing functions on clicking item cards
+  public interface itemCardListener {
+    void onDelete(int position);
+
+    void onEdit(int position);
+
+    void onAddToList(int position);
+
+    void onLongPress(int position);
   }
 
-  public List<Item> getLowInStockFilterResults() {
-    List<Item> results = new ArrayList<>();
+  public class ViewHolder extends RecyclerView.ViewHolder {
+    ImageView icon;
+    TextView name, category, number, size, expiryDate, expiryText;
+    CardView card;
+    MaterialButton removeB, editB, addToListB;
 
-    for (Item item : originalList) {
-      if (item.number < 5) {
-        results.add(item);
-      }
+    public ViewHolder(@NonNull View itemView) {
+      super(itemView);
+      Log.i("ADAPTER", "ViewHolder: the class itself");
+      card = itemView.findViewById(R.id.parent_addNewToList);
+      icon = itemView.findViewById(R.id.itemIcon);
+      name = itemView.findViewById(R.id.titleText);
+      category = itemView.findViewById(R.id.categoryText);
+      number = itemView.findViewById(R.id.amountText);
+      size = itemView.findViewById(R.id.sizeText);
+      expiryDate = itemView.findViewById(R.id.expiryDateText);
+      expiryText = itemView.findViewById(R.id.expiryText);
+      removeB = itemView.findViewById(R.id.removeButton);
+      editB = itemView.findViewById(R.id.editButton);
+      addToListB = itemView.findViewById(R.id.toShoppingListButton);
     }
-    return results;
-  }
 
-  public List<Item> getOutOfStockFilterResults() {
-    List<Item> results = new ArrayList<>();
-
-    for (Item item : originalList) {
-      if (item.number < 1) {
-        results.add(item);
+    public void bind() {
+      if (removeB.getVisibility() == View.VISIBLE) {
+        removeB.setVisibility(View.GONE);
+        editB.setVisibility(View.GONE);
+        addToListB.setVisibility(View.GONE);
       }
-    }
-    return results;
-  }
-
-  public List<Item> getExpiringSoonFilterResults() {
-    List<Item> results = new ArrayList<>();
-
-    for (Item item : originalList) {
-      if (getDateDifferenceAsLong(item.expiryDate) < 30) {
-        results.add(item);
+      icon.setImageResource(list.get(getAdapterPosition()).icon);
+      name.setText(list.get(getAdapterPosition()).name);
+      category.setText(list.get(getAdapterPosition()).category);
+      number.setText(list.get(getAdapterPosition()).number.toString() + " left in pantry");
+      size.setText(list.get(getAdapterPosition()).size);
+      expiryDate.setText(list.get(getAdapterPosition()).expiryDate);
+      // Set the text and color for 'days till expiry' based on the difference to the current day
+      if (getDateDifferenceAsLong(expiryDate.getText().toString()) < daysTillExpiryWarning
+          && getDateDifferenceAsLong(expiryDate.getText().toString()) > 0) {
+        expiryText.setText(
+            "Expires in " + getDateDifferenceAsString(expiryDate.getText().toString()) + " days");
+        expiryText.setTextColor(mResource.getColor(R.color.orange_warning, null));
+      } else if (getDateDifferenceAsLong(expiryDate.getText().toString()) < 1) {
+        expiryText.setText(
+            "Expired "
+                + Math.abs(getDateDifferenceAsLong(expiryDate.getText().toString()))
+                + " days ago");
+        expiryText.setTextColor(mResource.getColor(R.color.red_alert, null));
+      } else {
+        expiryText.setText(
+            "Expires in " + getDateDifferenceAsString(expiryDate.getText().toString()) + " days");
+        expiryText.setTextColor(mResource.getColor(R.color.blue_item, null));
       }
-    }
-    return results;
-  }
 
-  public List<Item> getExpiredFilterResults() {
-    List<Item> results = new ArrayList<>();
-
-    for (Item item : originalList) {
-      if (getDateDifferenceAsLong(item.expiryDate) < 1) {
-        results.add(item);
+      if (Integer.parseInt(list.get(getAdapterPosition()).number.toString()) > 0
+          && Integer.parseInt(list.get(getAdapterPosition()).number.toString()) < 6) {
+        number.setTextColor(mResource.getColor(R.color.orange_warning, null));
+        expiryText.setVisibility(View.VISIBLE);
+      } else if (Integer.parseInt(list.get(getAdapterPosition()).number.toString()) < 1) {
+        number.setTextColor(mResource.getColor(R.color.red_alert, null));
+        expiryText.setVisibility(View.INVISIBLE);
+      } else {
+        number.setTextColor(mResource.getColor(R.color.blue_item, null));
+        expiryText.setVisibility(View.VISIBLE);
       }
+
+      card.setOnClickListener(
+          view -> {
+            Log.i("ADAPTER", "onClick: TAPPED A CARD");
+            if (removeB.getVisibility() == View.VISIBLE) {
+              removeB.setVisibility(View.GONE);
+              editB.setVisibility(View.GONE);
+              addToListB.setVisibility(View.GONE);
+            } else {
+              removeB.setVisibility(View.VISIBLE);
+              editB.setVisibility(View.VISIBLE);
+              addToListB.setVisibility(View.VISIBLE);
+            }
+          });
+
+      card.setOnLongClickListener(
+          view -> {
+            Log.i("ADAPTER", "onClick: LONG PRESSED A CARD");
+            mListener.onLongPress(getAdapterPosition());
+            return true;
+          });
+
+      removeB.setOnClickListener(
+          view -> {
+            Log.i("ADAPTER", "onClick: REMOVE BUTTON");
+            mListener.onDelete(getAdapterPosition());
+          });
+
+      editB.setOnClickListener(
+          view -> {
+            Log.i("ADAPTER", "onClick: EDIT BUTTON");
+            mListener.onEdit(getAdapterPosition());
+          });
+
+      addToListB.setOnClickListener(
+          view -> {
+            Log.i("ADAPTER", "onClick: ADD TO SHOPPING LIST BUTTON");
+            mListener.onAddToList(getAdapterPosition());
+          });
     }
-    return results;
   }
 }

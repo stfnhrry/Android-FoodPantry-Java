@@ -7,25 +7,12 @@
         android:title="@string/search"
         android:icon="@drawable/ic_baseline_search_24"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always|collapseActionView"
+        app:showAsAction="always"
         android:contentDescription="@string/search"/>
     <item
         android:id="@+id/filter"
         android:title="@string/filter"
         android:contentDescription="content_description_filter"
         app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/favorite"
-        android:icon="@drawable/ic_baseline_cake_24"
-        android:title="favorite"
-        android:contentDescription="content_description_favorite"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/more"
-        android:title="more"
-        android:contentDescription="content_description_more"
-        app:showAsAction="never" />
 
 </menu>

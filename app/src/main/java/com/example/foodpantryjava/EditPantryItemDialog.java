@@ -54,8 +54,8 @@ public class EditPantryItemDialog extends DialogFragment {
     View view = inflater.inflate(R.layout.add_edit_item_dialog, container, false);
 
     toolbar = view.findViewById(R.id.toolbar);
-    nameEditField = view.findViewById(R.id.editName);
-    amountEditField = view.findViewById(R.id.editAmount);
+    nameEditField = view.findViewById(R.id.editName_newToList);
+    amountEditField = view.findViewById(R.id.editAmount_newToList);
     sizeEditField = view.findViewById(R.id.editSize);
     expiryDateEditField = view.findViewById(R.id.editDateMasked);
     categorySelector = view.findViewById(R.id.spinner);

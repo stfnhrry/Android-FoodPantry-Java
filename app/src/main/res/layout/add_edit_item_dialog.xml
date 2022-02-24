@@ -42,7 +42,7 @@
                 android:layout_marginHorizontal="8dp">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editName"
+                    android:id="@+id/editName_newToList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -89,7 +89,7 @@
                 android:layout_marginTop="16dp">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editAmount"
+                    android:id="@+id/editAmount_newToList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"

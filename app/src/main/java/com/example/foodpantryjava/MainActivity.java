@@ -53,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
   NavigationView navDrawer;
   NavController navController;
   MenuItem item;
+  ExpandableFab bottomNavFab;
+  FabOption fabOptionOne;
+  FabOption fabOptionTwo;
+  FabOption fabOptionThree;
   private Boolean backPressedOnce = false;
   final Runnable runnable = this::setBackPressedToFalse;
 
@@ -82,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
     View bottomNav = findViewById(R.id.coordinatorLayout);
-    ExpandableFab bottomNavFab = findViewById(R.id.fab);
-    FabOption fabOptionOne = findViewById(R.id.faboption_1);
-    FabOption fabOptionTwo = findViewById(R.id.faboption_2);
-    FabOption fabOptionThree = findViewById(R.id.faboption_3);
+    bottomNavFab = findViewById(R.id.fab);
+    fabOptionOne = findViewById(R.id.faboption_1);
+    fabOptionTwo = findViewById(R.id.faboption_2);
+    fabOptionThree = findViewById(R.id.faboption_3);
     ExtendedFloatingActionButton navRailFab = findViewById(R.id.nav_fab);
 
     Configuration configuration = getResources().getConfiguration();
@@ -113,10 +117,6 @@ public class MainActivity extends AppCompatActivity {
     for (int entry = 0; entry < backStackEntryCount; entry++) {
       fragmentManager.popBackStack();
     }
-  }
-
-  public void setActionBarTitle(String title){
-//    getSupportActionBar().setTitle(title);
   }
 
   @Override
@@ -380,9 +380,9 @@ public class MainActivity extends AppCompatActivity {
     final View customLayout =
         getLayoutInflater().inflate(R.layout.add_to_shopping_list_dialog, null);
     addToShoppingListDialog.setView(customLayout);
-    TextView text = customLayout.findViewById(R.id.itemNameText);
+    TextView text = customLayout.findViewById(R.id.itemName_shoppingList);
     text.setText(SaveFile.data.get(index).name);
-    TextInputEditText number = customLayout.findViewById(R.id.editAmountForShoppingCart);
+    TextInputEditText number = customLayout.findViewById(R.id.editAmount_shoppingList);
 
     addToShoppingListDialog.setPositiveButton(
         "Add",
@@ -410,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
               else if (!allowDecrement(Integer.parseInt(number.getText().toString()) - 1)) {
                 number.setError("Number too small");
               } else {
-                addToShoppingList(index, number.getText().toString());
+                addToShoppingList(text.getText().toString(), number.getText().toString());
                 dialog.dismiss();
               }
               Log.i("ITEM", "onClick: Positive shopping list button was pressed");
@@ -420,13 +420,12 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Adds an item to the shopping cart.
    *
-   * @param index current card index
    */
-  public void addToShoppingList(int index, String amount) {
+  public void addToShoppingList(String name, String amount) {
     Log.i("MAIN", "addToShoppingList: ");
     Log.i("MAIN", "addToShoppingList: Before adding list is: " + SaveFile.list.size());
     String listItemInfo =
-        SaveFile.data.get(index).name
+        name
             + ";break;"
             + amount
             + ";break;"
@@ -440,6 +439,53 @@ public class MainActivity extends AppCompatActivity {
     ShoppingListFragment.adapter.notifyItemInserted(SaveFile.list.size());
     saveShoppingListToPreferences();
   } // addToShoppingList
+
+  public void showAddNewToListDialog() {
+    MaterialAlertDialogBuilder addToShoppingListDialog = new MaterialAlertDialogBuilder(this);
+    addToShoppingListDialog.setTitle("Add New Item To List");
+    final View customLayout =
+            getLayoutInflater().inflate(R.layout.add_new_item_to_list_dialog, null);
+    addToShoppingListDialog.setView(customLayout);
+    TextInputEditText name = customLayout.findViewById(R.id.editName_newToList);
+    TextInputEditText number = customLayout.findViewById(R.id.editAmount_newToList);
+
+    addToShoppingListDialog.setPositiveButton(
+            "Add",
+            (dialogInterface, i) -> {
+              // needed on older versions of android for the override below to work
+            });
+    addToShoppingListDialog.setNegativeButton(
+            "Cancel", (dialogInterface, i) -> Log.i("ITEM", "onClick: Cancel pressed"));
+
+    AlertDialog dialog = addToShoppingListDialog.create();
+    dialog.show();
+
+    // code to prevent the wrong input from closing the dialog
+    dialog
+            .getButton(AlertDialog.BUTTON_POSITIVE)
+            .setOnClickListener(
+                    view -> {
+                      if (name.length() == 0) {
+                        name.setError("This field is required");
+                      } else if (name.length() > 28) {
+                        name.setError("Maximum 28 characters, currently: " + name.length());
+                      }
+                      else if (number.length() == 0) {
+                        number.setError("This field is required");
+                      } else if (!allowIncrement(
+                              Integer.parseInt(Objects.requireNonNull(number.getText()).toString()))) {
+                        number.setError("Number too large");
+                      }
+                      // allowDecrement will accept 0 but we want it to accept 1 as the lowest value here
+                      else if (!allowDecrement(Integer.parseInt(number.getText().toString()) - 1)) {
+                        number.setError("Number too small");
+                      } else {
+                        addToShoppingList(name.getText().toString(), number.getText().toString());
+                        dialog.dismiss();
+                      }
+                      Log.i("ITEM", "onClick: Positive new item to shopping list button was pressed");
+                    });
+  }
 
   public void showDeleteAllItemsDialog() {
     MaterialAlertDialogBuilder deleteAllDialog = new MaterialAlertDialogBuilder(this);
@@ -463,6 +509,29 @@ public class MainActivity extends AppCompatActivity {
     PantryFragment.adapter.notifyDataSetChanged();
     SaveFile.pantry.clear();
     saveHashmapToPreferences();
+  }
+
+  public void showClearShoppingListDialog() {
+    MaterialAlertDialogBuilder clearDialog = new MaterialAlertDialogBuilder(this);
+    clearDialog.setTitle(getResources().getString(R.string.clear_shopping_list_title));
+    clearDialog.setMessage(getResources().getString(R.string.clear_shopping_list_message));
+    clearDialog.setNegativeButton(
+            getResources().getString(R.string.cancel),
+            (dialogInterface, i) -> Log.i("DIALOG", "onClick: Negative button clicked"));
+    clearDialog.setPositiveButton(
+            getResources().getString(R.string.clear_all),
+            (dialogInterface, i) -> {
+              Log.i("DIALOG", "onClick: Positive button clicked");
+              clearShoppingList();
+            });
+    AlertDialog dialog = clearDialog.create();
+    dialog.show();
+  }
+
+  public void clearShoppingList(){
+    SaveFile.list.clear();
+    ShoppingListFragment.adapter.notifyDataSetChanged();
+    saveShoppingListToPreferences();
   }
 
   public void saveToArray(
@@ -780,8 +849,66 @@ public class MainActivity extends AppCompatActivity {
 
   public void setSelectedMenuItem(MenuItem item) {
     navigationBar.getMenu().findItem(item.getItemId()).setChecked(true);
-//    navRail.getMenu().findItem(item.getItemId()).setChecked(true);
-//    modalNavDrawer.setCheckedItem(item);
-//    navDrawer.setCheckedItem(item);
+    navRail.getMenu().findItem(item.getItemId()).setChecked(true);
+    modalNavDrawer.setCheckedItem(item);
+    navDrawer.setCheckedItem(item);
+    setNavBarFabFunction(item);
+  }
+
+  public void setNavBarFabFunction(MenuItem item){
+    Log.i("Nav Bar FAB", "setNavBarFabFunction: ");
+    switch (item.getTitle().toString()) {
+      case "Pantry":
+        if (bottomNavFab.getEfabEnabled() == false){
+          bottomNavFab.setEfabEnabled(true);
+        }
+        Log.i("Nav Bar FAB", "setNavBarFabFunction: Pantry");
+        if (fabOptionOne.getFabOptionEnabled() != true){
+          fabOptionOne.setFabOptionEnabled(true);
+        }
+        fabOptionOne.setOnClickListener(view -> showAddItemDialog());
+        if (fabOptionTwo.getFabOptionEnabled() != true){
+          fabOptionTwo.setFabOptionEnabled(true);
+        }
+        if (fabOptionThree.getFabOptionEnabled() != true){
+          fabOptionThree.setFabOptionEnabled(true);
+        }
+        fabOptionThree.setOnClickListener(view -> showDeleteAllItemsDialog());
+        break;
+      case "Recipes":
+        if (bottomNavFab.getEfabEnabled() == false){
+          bottomNavFab.setEfabEnabled(true);
+        }
+        if (fabOptionOne.getFabOptionEnabled() == true){
+          fabOptionOne.setFabOptionEnabled(false);
+        }
+        if (fabOptionTwo.getFabOptionEnabled() == true){
+          fabOptionTwo.setFabOptionEnabled(false);
+        }
+        if (fabOptionThree.getFabOptionEnabled() == true){
+          fabOptionThree.setFabOptionEnabled(false);
+        }
+        fabOptionThree.setOnClickListener(view -> showClearShoppingListDialog());
+        // maybe do stuff here
+        break;
+      case "List":
+        if (bottomNavFab.getEfabEnabled() == false){
+          bottomNavFab.setEfabEnabled(true);
+        }
+        if (fabOptionOne.getFabOptionEnabled() != true){
+          fabOptionOne.setFabOptionEnabled(true);
+        }
+        fabOptionOne.setOnClickListener(view -> showAddNewToListDialog());
+        if (fabOptionTwo.getFabOptionEnabled() == true){
+          fabOptionTwo.setFabOptionEnabled(false);
+        }
+        if (fabOptionThree.getFabOptionEnabled() == true){
+          fabOptionThree.setFabOptionEnabled(false);
+        }
+        break;
+      case "Settings":
+        bottomNavFab.setEfabEnabled(false);
+        break;
+    }
   }
 }

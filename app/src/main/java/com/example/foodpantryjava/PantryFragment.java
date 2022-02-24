@@ -4,13 +4,11 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -23,7 +21,6 @@ public class PantryFragment extends Fragment {
 
   public static RecyclerView pantryRecyclerView;
   public static AdapterClass adapter;
-  public MaterialToolbar topAppBar;
   int minCardWidth = 293;
   Integer columns = 1;
 
@@ -44,18 +41,15 @@ public class PantryFragment extends Fragment {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_pantry, container, false);
 
-    MaterialToolbar myToolbar = (MaterialToolbar) view.findViewById(R.id.toolBar_Pantry);
-    myToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-      @Override
-      public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getTitle().toString()){
-          case "Search":
-            //do stuff here
-          case "Filter":
-            //do stuff
-        }
-        return true;
+    MaterialToolbar myToolbar = view.findViewById(R.id.toolBar_Pantry);
+    myToolbar.setOnMenuItemClickListener(item -> {
+      switch (item.getTitle().toString()){
+        case "Search":
+          //do stuff here
+        case "Filter":
+          //do stuff
       }
+      return true;
     });
 
     SearchView searchView = view.findViewById(R.id.action_search);

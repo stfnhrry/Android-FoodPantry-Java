@@ -240,7 +240,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.ViewHolder>
     public ViewHolder(@NonNull View itemView) {
       super(itemView);
       Log.i("ADAPTER", "ViewHolder: the class itself");
-      card = itemView.findViewById(R.id.cardView);
+      card = itemView.findViewById(R.id.parent_addNewToList);
       icon = itemView.findViewById(R.id.itemIcon);
       name = itemView.findViewById(R.id.titleText);
       category = itemView.findViewById(R.id.categoryText);

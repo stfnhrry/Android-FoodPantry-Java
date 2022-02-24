@@ -888,7 +888,6 @@ public class MainActivity extends AppCompatActivity {
         if (fabOptionThree.getFabOptionEnabled() == true){
           fabOptionThree.setFabOptionEnabled(false);
         }
-        fabOptionThree.setOnClickListener(view -> showClearShoppingListDialog());
         // maybe do stuff here
         break;
       case "List":
@@ -902,9 +901,10 @@ public class MainActivity extends AppCompatActivity {
         if (fabOptionTwo.getFabOptionEnabled() == true){
           fabOptionTwo.setFabOptionEnabled(false);
         }
-        if (fabOptionThree.getFabOptionEnabled() == true){
-          fabOptionThree.setFabOptionEnabled(false);
+        if (fabOptionThree.getFabOptionEnabled() != true){
+          fabOptionThree.setFabOptionEnabled(true);
         }
+        fabOptionThree.setOnClickListener(view -> showClearShoppingListDialog());
         break;
       case "Settings":
         bottomNavFab.setEfabEnabled(false);
